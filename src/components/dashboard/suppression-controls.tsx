@@ -2,16 +2,19 @@
 import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Power, Target, Waves, ShieldCheck, ShieldOff, KeyRound, MessageSquareCode, Eye, EyeOff } from 'lucide-react';
+import { Power, Target, Waves, ShieldCheck, ShieldOff, KeyRound, MessageSquareCode, Eye, EyeOff, PowerOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
+type PendingAction = 'toggleSystem' | 'togglePower' | null;
+
 export function SuppressionControls() {
   const { toast } = useToast();
   const [isSystemActive, setIsSystemActive] = useState(true);
+  const [isPowerOn, setIsPowerOn] = useState(true);
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [showOtpDialog, setShowOtpDialog] = useState(false);
   const [password, setPassword] = useState('');
@@ -19,6 +22,7 @@ export function SuppressionControls() {
   const [passwordError, setPasswordError] = useState('');
   const [otpError, setOtpError] = useState('');
   const [pendingState, setPendingState] = useState(false);
+  const [pendingAction, setPendingAction] = useState<PendingAction>(null);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleOverride = (gun: string) => {
@@ -38,9 +42,16 @@ export function SuppressionControls() {
 
   const handleToggleSystem = (checked: boolean) => {
     setPendingState(checked);
+    setPendingAction('toggleSystem');
     setShowPasswordDialog(true);
   };
   
+  const handleTogglePower = (on: boolean) => {
+    setPendingState(on);
+    setPendingAction('togglePower');
+    setShowPasswordDialog(true);
+  }
+
   const handlePasswordSubmit = () => {
     // In a real app, you'd verify the password against a backend.
     if (password === '1234') {
@@ -59,13 +70,25 @@ export function SuppressionControls() {
     if (otp === '12345') {
       setOtpError('');
       setShowOtpDialog(false);
-      setIsSystemActive(pendingState);
       setOtp('');
-      toast({
-        title: `System has been ${pendingState ? 'activated' : 'deactivated'}`,
-        description: `The suppression system is now ${pendingState ? 'online' : 'offline'}.`,
-        variant: pendingState ? 'default' : 'destructive',
-      });
+
+      if (pendingAction === 'toggleSystem') {
+        setIsSystemActive(pendingState);
+        toast({
+          title: `System has been ${pendingState ? 'activated' : 'deactivated'}`,
+          description: `The suppression system is now ${pendingState ? 'online' : 'offline'}.`,
+          variant: pendingState ? 'default' : 'destructive',
+        });
+      } else if (pendingAction === 'togglePower') {
+        setIsPowerOn(pendingState);
+         toast({
+          title: `Power has been turned ${pendingState ? 'ON' : 'OFF'}`,
+          description: `Non-essential power is now ${pendingState ? 'active' : 'inactive'}.`,
+          variant: pendingState ? 'default' : 'destructive',
+        });
+      }
+      setPendingAction(null);
+
     } else {
       setOtpError('Incorrect OTP. Please try again.');
     }
@@ -89,19 +112,34 @@ export function SuppressionControls() {
                 />
             </div>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Button variant="outline" size="lg" className="h-20 flex-col gap-2" onClick={() => handleOverride('Water Sprinklers')} disabled={!isSystemActive}>
-            <Waves className="w-6 h-6" />
-            <span>Water Sprinklers</span>
-          </Button>
-          <Button variant="outline" size="lg" className="h-20 flex-col gap-2" onClick={() => handleOverride('Foam Concentrate')} disabled={!isSystemActive}>
-            <Power className="w-6 h-6" />
-            <span>Foam Concentrate</span>
-          </Button>
-          <Button size="lg" className="h-20 flex-col gap-2 bg-accent hover:bg-accent/90 text-accent-foreground" onClick={() => handleOverride('Targeted MAP Gun')} disabled={!isSystemActive}>
-            <Target className="w-6 h-6" />
-            <span>Targeted MAP Gun</span>
-          </Button>
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Button variant="outline" size="lg" className="h-20 flex-col gap-2" onClick={() => handleOverride('Water Sprinklers')} disabled={!isSystemActive || !isPowerOn}>
+              <Waves className="w-6 h-6" />
+              <span>Water Sprinklers</span>
+            </Button>
+            <Button variant="outline" size="lg" className="h-20 flex-col gap-2" onClick={() => handleOverride('Foam Concentrate')} disabled={!isSystemActive || !isPowerOn}>
+              <Power className="w-6 h-6" />
+              <span>Foam Concentrate</span>
+            </Button>
+            <Button size="lg" className="h-20 flex-col gap-2 bg-accent hover:bg-accent/90 text-accent-foreground" onClick={() => handleOverride('Targeted MAP Gun')} disabled={!isSystemActive || !isPowerOn}>
+              <Target className="w-6 h-6" />
+              <span>Targeted MAP Gun</span>
+            </Button>
+          </div>
+          <div className="md:col-span-2">
+             {isPowerOn ? (
+                <Button variant="destructive" size="lg" className="w-full h-20" onClick={() => handleTogglePower(false)}>
+                    <PowerOff className="w-6 h-6" />
+                    <span>Total Power Off (Non-Essentials)</span>
+                </Button>
+            ) : (
+                <Button variant="secondary" size="lg" className="w-full h-20" onClick={() => handleTogglePower(true)}>
+                    <Power className="w-6 h-6" />
+                    <span>Restore Power</span>
+                </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
 

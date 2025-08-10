@@ -13,7 +13,7 @@ import {
   SidebarMenuButton,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-import { Shield, Home, History, Settings, MessageSquare, LogOut, User, Bot, Lightbulb, Siren } from 'lucide-react';
+import { Shield, Home, History, Settings, MessageSquare, LogOut, User, Lightbulb, Siren } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -26,7 +26,6 @@ const menuItems = [
   { href: '/alarms', label: 'Alarms', icon: Siren },
   { href: '/incidents', label: 'Incidents', icon: History },
   { href: '/messaging', label: 'Messaging', icon: MessageSquare },
-  { href: '/chatbot', label: 'Luffy AI', icon: Bot },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
 

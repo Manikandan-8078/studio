@@ -29,8 +29,6 @@ const chatFlow = ai.defineFlow(
 
     const {output} = await ai.generate({
       prompt: [
-        {role: 'user', content: [{text: systemPrompt}]},
-        {role: 'model', content: [{text: "Ok, I am Gemini AI. How can I help you?"}]},
         ...history.map(h => ({
           role: h.role,
           content: [{text: h.content}],
@@ -38,8 +36,9 @@ const chatFlow = ai.defineFlow(
         {role: 'user', content: [{text: message}]},
       ],
       config: {
-        temperature: 0.5,
+        temperature: 0.7,
       },
+      system: systemPrompt,
     });
 
     return {message: output!.text};

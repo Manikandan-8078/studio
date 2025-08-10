@@ -56,7 +56,7 @@ export default function ChatbotPage() {
           <Bot /> Gemini AI
         </CardTitle>
         <CardDescription>
-          Ask me anything about fire safety, incident analysis, or system status.
+          Your friendly and knowledgeable AI assistant. Ask me anything!
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 overflow-y-auto">

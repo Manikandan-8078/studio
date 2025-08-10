@@ -22,11 +22,11 @@ export async function chat(input: ChatRequest): Promise<ChatResponse> {
     })),
   ];
 
-  const {output} = await ai.generate({
+  const response = await ai.generate({
     prompt: newMessage,
     system: systemPrompt,
     history: messages.slice(0, -1),
   });
 
-  return {message: {role: 'model', content: output!.text}};
+  return {message: {role: 'model', content: response.text}};
 }

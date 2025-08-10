@@ -38,9 +38,12 @@ export default function LoginPage() {
         description: 'Welcome back, Admin!',
       });
       router.push('/dashboard');
-    } else if (role === 'client') {
-        // Add client login logic here
-        setError('Client login is not yet implemented.');
+    } else if (role === 'client' && username === 'mk' && password === '123') {
+        toast({
+            title: 'Login Successful',
+            description: 'Welcome back, Client!',
+        });
+        router.push('/dashboard');
     }
     else {
       setError('Invalid username or password.');

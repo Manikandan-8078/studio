@@ -13,7 +13,7 @@ import {
   SidebarMenuButton,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-import { Shield, Home, History, Settings, MessageSquare, LogOut } from 'lucide-react';
+import { Shield, Home, History, Settings, MessageSquare, LogOut, BotMessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -21,6 +21,7 @@ const menuItems = [
   { href: '/', label: 'Dashboard', icon: Home },
   { href: '/incidents', label: 'Incidents', icon: History },
   { href: '/messaging', label: 'Messaging', icon: MessageSquare },
+  { href: '/chatbot', label: 'Chatbot', icon: BotMessageSquare },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
 

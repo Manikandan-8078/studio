@@ -1,0 +1,86 @@
+'use client';
+import type { ReactNode } from 'react';
+import {
+  SidebarProvider,
+  Sidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarFooter,
+  SidebarTrigger,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarSeparator,
+} from '@/components/ui/sidebar';
+import { Shield, Home, History, Settings, MessageSquare, LogOut } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+const menuItems = [
+  { href: '/', label: 'Dashboard', icon: Home },
+  { href: '/incidents', label: 'Incidents', icon: History },
+  { href: '/messaging', label: 'Messaging', icon: MessageSquare },
+  { href: '/settings', label: 'Settings', icon: Settings },
+];
+
+export function MainLayout({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+
+  return (
+    <SidebarProvider>
+      <div className="group flex min-h-screen w-full" data-variant="sidebar">
+        <Sidebar>
+          <SidebarHeader className="group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0 transition-all duration-200">
+            <div className="flex items-center gap-2">
+              <Shield className="text-primary size-8" />
+              <h1 className="text-xl font-semibold">Inferno Shield</h1>
+            </div>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarMenu>
+              {menuItems.map((item) => (
+                <SidebarMenuItem key={item.href}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === item.href}
+                    tooltip={item.label}
+                  >
+                    <Link href={item.href}>
+                      <item.icon />
+                      <span>{item.label}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarContent>
+          <SidebarSeparator />
+          <SidebarFooter>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Logout">
+                  <Link href="#">
+                    <LogOut />
+                    <span>Logout</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarFooter>
+        </Sidebar>
+        <div className="flex flex-1 flex-col">
+          <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6">
+            <SidebarTrigger className="md:hidden" />
+            <div className='flex-1'>
+                <h1 className="text-lg font-semibold capitalize">
+                {pathname.substring(1).split('/')[0] || 'Dashboard'}
+                </h1>
+            </div>
+          </header>
+          <main className="flex-1 overflow-auto p-4 md:p-6">{children}</main>
+        </div>
+      </div>
+    </SidebarProvider>
+  );
+}

@@ -42,7 +42,7 @@ export function SuppressionControls() {
   
   const handlePasswordSubmit = () => {
     // In a real app, you'd verify the password against a backend.
-    if (password === 'adminpass') {
+    if (password === 'password1234') {
       setPasswordError('');
       setShowPasswordDialog(false);
       setShowOtpDialog(true);

@@ -100,8 +100,8 @@ export default function ChatbotPage() {
       <Card className="flex flex-col h-[calc(100vh-5rem)]">
         <CardHeader className="flex flex-row justify-between items-center">
             <div>
-                <CardTitle>AI Chatbot</CardTitle>
-                <CardDescription>Have a conversation with our AI assistant.</CardDescription>
+                <CardTitle>Luffy</CardTitle>
+                <CardDescription>Have a conversation with Luffy.</CardDescription>
             </div>
             <Button variant="outline" onClick={() => setShowPasswordDialog(true)}>
                 <History className="mr-2 h-4 w-4" />

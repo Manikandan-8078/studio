@@ -32,7 +32,7 @@ const prompt = ai.definePrompt({
   name: 'chatbotPrompt',
   input: {schema: ChatInputSchema},
   output: {schema: ChatOutputSchema},
-  prompt: `You are a helpful AI assistant.
+  prompt: `You are Luffy, a helpful AI assistant.
 
 You have access to the following chat history. Continue the conversation.
 

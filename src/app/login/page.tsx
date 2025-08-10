@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { LogIn, KeyRound, User, Briefcase, Eye, EyeOff } from 'lucide-react';
+import { LogIn, KeyRound, User, Shield, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -56,7 +56,7 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-background">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-            <Briefcase className="mx-auto h-12 w-12 text-primary" />
+            <Shield className="mx-auto h-12 w-12 text-primary" />
             <CardTitle className="mt-4">Inferno Shield</CardTitle>
             <CardDescription>Welcome back! Please enter your details.</CardDescription>
         </CardHeader>

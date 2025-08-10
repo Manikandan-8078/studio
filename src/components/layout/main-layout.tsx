@@ -23,7 +23,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: Home },
   { href: '/incidents', label: 'Incidents', icon: History },
-  { href: '/chatbot', label: 'Luffy AI', icon: Bot },
+  { href: '/chatbot', label: 'Gemini AI', icon: Bot },
   { href: '/messaging', label: 'Messaging', icon: MessageSquare },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];

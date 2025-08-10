@@ -53,7 +53,7 @@ export default function ChatbotPage() {
     <Card className="flex flex-col h-[calc(100vh-5rem)]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Bot /> Luffy AI
+          <Bot /> Gemini AI
         </CardTitle>
         <CardDescription>
           Ask me anything about fire safety, incident analysis, or system status.

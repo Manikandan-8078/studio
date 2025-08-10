@@ -25,12 +25,12 @@ const chatFlow = ai.defineFlow(
   },
   async input => {
     const {history, message} = input;
-    const systemPrompt = `You are a helpful AI assistant named Luffy AI.`;
+    const systemPrompt = `You are a helpful AI assistant named Gemini AI.`;
 
     const {output} = await ai.generate({
       prompt: [
         {role: 'user', content: [{text: systemPrompt}]},
-        {role: 'model', content: [{text: "Ok, I am Luffy AI. How can I help you?"}]},
+        {role: 'model', content: [{text: "Ok, I am Gemini AI. How can I help you?"}]},
         ...history.map(h => ({
           role: h.role,
           content: [{text: h.content}],

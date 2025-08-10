@@ -12,7 +12,8 @@ const initialEvents = [
 const newEvents = [
   { time: '14:32:05', message: 'Warning: Temperature rise in Server Room.', type: 'alert' },
   { time: '14:32:10', message: 'Critical: Smoke detected in Server Room.', type: 'alert' },
-  { time: '14:32:11', message: 'FIRE CONFIRMED: Server Room. Power disconnected.', type: 'alert' },
+  { time: '14:32:11', message: 'FIRE CONFIRMED: Server Room.', type: 'alert' },
+  { time: '14:32:11', message: 'Auto Power-Cut Protocol: Non-essential power disconnected.', type: 'info'},
   { time: '14:32:11', message: 'Emergency lights activated building-wide.', type: 'info' },
   { time: '14:32:12', message: 'Emergency services notified.', type: 'info' },
   { time: '14:32:13', message: 'Suppression system activated in Server Room.', type: 'info' },

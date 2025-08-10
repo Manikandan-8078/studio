@@ -12,7 +12,7 @@ export const mockIncidents: Incident[] = [
     location: 'Server Room, 2nd Floor',
     severity: 'Critical',
     duration: '12m 34s',
-    log: 'Incident started at 14:32:11 in Server Room. Initial detection via thermal sensor array at 14:32:05, followed by photoelectric smoke detection at 14:32:10. Dual-sensor confirmation triggered main power cutoff to the zone. Emergency lighting activated immediately. Automated notification sent to building manager and local fire department. Suppression system deployed MAP solution at 14:32:13. Fire contained and extinguished by 14:44:45. No casualties reported. Minor equipment damage.',
+    log: 'Incident started at 14:32:11 in Server Room. Initial detection via thermal sensor array at 14:32:05, followed by photoelectric smoke detection at 14:32:10. Dual-sensor confirmation triggered automated safety protocols. Auto Power-Cut Protocol activated, disconnecting main power to non-essential areas to prevent electrical fire spread. Emergency lighting activated immediately. Automated notification sent to building manager and local fire department. Suppression system deployed MAP solution at 14:32:13. Fire contained and extinguished by 14:44:45. No casualties reported. Minor equipment damage.',
   },
   {
     id: 'inc-002',

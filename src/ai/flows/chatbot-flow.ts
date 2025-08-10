@@ -29,7 +29,8 @@ const chatFlow = ai.defineFlow(
 
     const {output} = await ai.generate({
       prompt: [
-        {text: systemPrompt},
+        {role: 'user', content: [{text: systemPrompt}]},
+        {role: 'model', content: [{text: "Ok, I am Luffy AI. How can I help you?"}]},
         ...history.map(h => ({
           role: h.role,
           content: [{text: h.content}],

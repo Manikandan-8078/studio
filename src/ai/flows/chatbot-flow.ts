@@ -14,21 +14,22 @@ export async function chat(input: ChatRequest): Promise<ChatResponse> {
   const {history, newMessage} = input;
   const systemPrompt = `You are a helpful AI assistant.`;
 
+  // The history from the client already includes the latest user message.
+  const messages = [
+    ...history.map(h => ({
+      role: h.role,
+      content: [{text: h.content}],
+    })),
+  ];
+
   const {output} = await ai.generate({
     prompt: [
       {role: 'system', content: [{text: systemPrompt}]},
-      ...history.map(h => ({
-        role: h.role,
-        content: [{text: h.content}],
-      })),
-      {role: 'user', content: [{text: newMessage}]},
+      ...messages,
     ],
-    // IMPORTANT: The history has to be structured as a sequence of user and model messages.
-    // The "system" message is optional.
-    // The last message in the list must be from the user.
-    history: history.map(h => ({
+    history: messages.slice(0, -1).map(h => ({
       role: h.role,
-      content: [{text: h.content}],
+      content: h.content,
     })),
   });
 

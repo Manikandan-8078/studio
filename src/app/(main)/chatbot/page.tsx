@@ -46,8 +46,8 @@ export default function ChatbotPage() {
 
     try {
       const response = await chat({
-        history: newHistory.slice(0, -1),
-        newMessage: data.message,
+        history: newHistory, // Send the full history including the new message
+        newMessage: data.message, // Kept for consistency, but flow now primarily uses history
       });
       setHistory([...newHistory, response.message]);
     } catch (error) {

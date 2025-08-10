@@ -3,7 +3,6 @@ import type { Incident, EmergencyContact, Zone, SensorDetail, User } from './typ
 
 export const mockUsers: User[] = [
     { id: 'user-001', username: 'mk', password: '8078', role: 'admin' },
-    { id: 'user-002', username: 'mk', password: '123', role: 'client', canLogin: true },
 ];
 
 export const mockIncidents: Incident[] = [

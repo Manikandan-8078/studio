@@ -16,7 +16,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { LogIn, KeyRound, User, Shield, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import Link from 'next/link';
 import { mockUsers } from '@/lib/mock-data';
@@ -26,7 +25,6 @@ export default function LoginPage() {
   const { toast } = useToast();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('admin');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
@@ -34,31 +32,14 @@ export default function LoginPage() {
     setError('');
 
     const adminUser = mockUsers.find(u => u.role === 'admin');
-    const clientUser = mockUsers.find(u => u.role === 'client');
 
-    if (role === 'admin' && username === adminUser?.username && password === adminUser?.password) {
+    if (username === adminUser?.username && password === adminUser?.password) {
       toast({
         title: 'Login Successful',
         description: 'Welcome back, Admin!',
       });
       router.push('/dashboard');
-    } else if (role === 'client' && username === clientUser?.username && password === clientUser?.password) {
-        if (!clientUser.canLogin) {
-            setError('Your account is disabled. Please contact an administrator.');
-            toast({
-                title: 'Login Failed',
-                description: 'Your account is disabled.',
-                variant: 'destructive',
-            });
-            return;
-        }
-        toast({
-            title: 'Login Successful',
-            description: 'Welcome back, Client!',
-        });
-        router.push('/dashboard');
-    }
-    else {
+    } else {
       setError('Invalid username or password.');
       toast({
         title: 'Login Failed',
@@ -77,19 +58,6 @@ export default function LoginPage() {
             <CardDescription>Welcome back! Please enter your details.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-            <div className="space-y-2">
-                <Label>Role</Label>
-                <RadioGroup defaultValue="admin" value={role} onValueChange={setRole} className="flex space-x-4">
-                    <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="admin" id="admin" />
-                        <Label htmlFor="admin">Admin</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="client" id="client" />
-                        <Label htmlFor="client">Client</Label>
-                    </div>
-                </RadioGroup>
-          </div>
           <div className="space-y-2">
             <Label htmlFor="username">Username</Label>
             <div className="relative">

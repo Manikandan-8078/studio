@@ -2,13 +2,16 @@
 import { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { Flame, Thermometer } from 'lucide-react';
+import { Flame, Thermometer, DoorOpen, ChevronsRight } from 'lucide-react';
 import type { Zone, ZoneStatus } from '@/lib/types';
 import { mockZones } from '@/lib/mock-data';
 import Link from 'next/link';
+import { EvacuationRoutes } from './evacuation-routes';
 
 export function BuildingMap() {
   const [mapZones, setMapZones] = useState<Zone[]>(mockZones);
+  const [fireDetected, setFireDetected] = useState(false);
+  const [criticalZoneId, setCriticalZoneId] = useState<string | null>(null);
 
   useEffect(() => {
     // Simulate a fire event and temperature changes
@@ -22,6 +25,8 @@ export function BuildingMap() {
       setMapZones((prevZones) =>
         prevZones.map((z) => (z.id === 'zone-4' ? { ...z, status: 'critical', temp: 75, sensors: z.sensors.map(s => s.name === 'Smoke' ? {...s, status: 'Triggered'} : s) } : z))
       );
+      setFireDetected(true);
+      setCriticalZoneId('zone-4');
     }, 4000);
     
     const timer3 = setTimeout(() => {
@@ -74,31 +79,55 @@ export function BuildingMap() {
           <CardTitle>Building Map - Live Status</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-3 grid-rows-2 gap-2 aspect-[16/9] bg-background p-2 rounded-md border">
-            {mapZones.map((zone) => (
-              <Link
-                href={`/zones/${zone.id}`}
-                key={zone.id}
-                className={cn(
-                  'rounded-md border-2 flex items-center justify-center p-2 transition-colors duration-500',
-                  getZoneClass(zone.status)
-                )}
-                data-ai-hint="building interior"
-              >
-                <div className="text-center text-primary-foreground">
-                  { getStatusIcon(zone.status) ? getStatusIcon(zone.status) :
-                    <div className="flex justify-center items-center mb-1">
-                      <Thermometer size={18} className="mr-1" />
-                      <span>{zone.temp}°C</span>
+          <div className="relative aspect-[16/9] bg-background p-2 rounded-md border">
+            <div className="grid grid-cols-3 grid-rows-2 gap-2 h-full">
+                {mapZones.map((zone) => (
+                <Link
+                    href={`/zones/${zone.id}`}
+                    key={zone.id}
+                    className={cn(
+                    'rounded-md border-2 flex items-center justify-center p-2 transition-colors duration-500',
+                    getZoneClass(zone.status)
+                    )}
+                    data-ai-hint="building interior"
+                >
+                    <div className="text-center text-primary-foreground">
+                    { getStatusIcon(zone.status) ? getStatusIcon(zone.status) :
+                        <div className="flex justify-center items-center mb-1">
+                        <Thermometer size={18} className="mr-1" />
+                        <span>{zone.temp}°C</span>
+                        </div>
+                    }
+                    <p className="text-sm font-medium">{zone.name}</p>
                     </div>
-                  }
-                  <p className="text-sm font-medium">{zone.name}</p>
+                </Link>
+                ))}
+            </div>
+             {fireDetected && (
+              <div className="absolute inset-0 pointer-events-none">
+                {/* Exit Icons */}
+                <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-center pointer-events-auto">
+                    <DoorOpen className="h-8 w-8 mx-auto text-green-500" />
+                    <p className="text-xs font-bold text-green-500">EXIT A</p>
                 </div>
-              </Link>
-            ))}
+                 <div className="absolute -top-10 right-4 text-center pointer-events-auto">
+                    <DoorOpen className="h-8 w-8 mx-auto text-green-500" />
+                    <p className="text-xs font-bold text-green-500">EXIT B</p>
+                </div>
+
+                {/* Evacuation Path */}
+                 <div className="absolute top-[25%] left-[50%] animate-pulse">
+                    <ChevronsRight className="w-12 h-12 text-green-400 -rotate-90" />
+                </div>
+                <div className="absolute top-[58%] left-[58%] animate-pulse">
+                    <ChevronsRight className="w-12 h-12 text-green-400 -rotate-90" />
+                </div>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
+      {fireDetected && criticalZoneId && <EvacuationRoutes criticalZoneId={criticalZoneId} />}
     </>
   );
 }

@@ -22,8 +22,8 @@ export async function chat(req: ChatRequest): Promise<ChatResponse> {
 
   const {output} = await ai.generate({
     prompt: [
-      ...history.flatMap(h => h.content.map(c => c.text)),
-      req.message,
+      ...history.flatMap(h => `${h.role}: ${h.content[0].text}`),
+      `user: ${req.message}`,
     ].join('\n'),
   });
 

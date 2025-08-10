@@ -1,5 +1,6 @@
 
 import { BuildingMap } from '@/components/dashboard/building-map';
+import { EmergencyLights } from '@/components/dashboard/emergency-lights';
 import { LiveFeed } from '@/components/dashboard/live-feed';
 import { SensorStatus } from '@/components/dashboard/sensor-status';
 import { SuppressionControls } from '@/components/dashboard/suppression-controls';
@@ -13,6 +14,7 @@ export default function DashboardPage() {
       </div>
       <div className="lg:col-span-1 space-y-6">
         <SensorStatus />
+        <EmergencyLights />
         <LiveFeed />
       </div>
     </div>

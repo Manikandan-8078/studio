@@ -1,3 +1,4 @@
+
 'use client';
 import type { ReactNode } from 'react';
 import {
@@ -12,7 +13,7 @@ import {
   SidebarMenuButton,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-import { Shield, Home, History, Settings, MessageSquare, LogOut, User, Bot } from 'lucide-react';
+import { Shield, Home, History, Settings, MessageSquare, LogOut, User, Bot, Lightbulb } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -23,6 +24,7 @@ const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: Home },
   { href: '/incidents', label: 'Incidents', icon: History },
   { href: '/messaging', label: 'Messaging', icon: MessageSquare },
+  { href: '/emergency-lights', label: 'Emergency Lights', icon: Lightbulb },
   { href: '/chatbot', label: 'Luffy AI', icon: Bot },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
@@ -111,7 +113,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
             <SidebarTrigger className="md:hidden" />
             <div className='flex-1'>
                 <h1 className="text-lg font-semibold capitalize">
-                {pathname.substring(1).split('/')[0] || 'Dashboard'}
+                {pathname.substring(1).split('/')[0].replace('-', ' ') || 'Dashboard'}
                 </h1>
             </div>
           </header>

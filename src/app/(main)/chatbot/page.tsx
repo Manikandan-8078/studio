@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -83,7 +82,7 @@ export default function ChatbotPage() {
   }
   
   const handlePasswordSubmit = () => {
-    if (password === 'password1234') {
+    if (password === '1234') {
       setPasswordError('');
       setShowPasswordDialog(false);
       setShowHistoryDialog(true);

@@ -1,3 +1,4 @@
+
 'use client';
 import type { ReactNode } from 'react';
 import {
@@ -65,9 +66,11 @@ export function MainLayout({ children }: { children: ReactNode }) {
                 <DropdownMenuItem>Billing</DropdownMenuItem>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Logout</span>
+                <DropdownMenuItem asChild>
+                  <Link href="/login">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Logout</span>
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -95,7 +98,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Logout">
-                  <Link href="#">
+                  <Link href="/login">
                     <LogOut />
                     <span>Logout</span>
                   </Link>

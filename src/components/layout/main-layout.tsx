@@ -1,4 +1,3 @@
-
 'use client';
 import type { ReactNode } from 'react';
 import {
@@ -13,7 +12,7 @@ import {
   SidebarMenuButton,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-import { Shield, Home, History, Settings, MessageSquare, LogOut, User, Bot } from 'lucide-react';
+import { Shield, Home, History, Settings, MessageSquare, LogOut, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -23,7 +22,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: Home },
   { href: '/incidents', label: 'Incidents', icon: History },
-  { href: '/chatbot', label: 'Gemini AI', icon: Bot },
   { href: '/messaging', label: 'Messaging', icon: MessageSquare },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];

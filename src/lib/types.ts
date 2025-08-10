@@ -1,3 +1,12 @@
+
+export interface User {
+  id: string;
+  username: string;
+  password?: string;
+  role: 'admin' | 'client';
+  canLogin?: boolean;
+}
+
 export interface Incident {
   id: string;
   date: string;

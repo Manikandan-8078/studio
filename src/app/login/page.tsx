@@ -19,6 +19,7 @@ import { useToast } from '@/hooks/use-toast';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import Link from 'next/link';
+import { mockUsers } from '@/lib/mock-data';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -31,14 +32,26 @@ export default function LoginPage() {
 
   const handleLogin = () => {
     setError('');
-    // Hardcoded credentials for demonstration
-    if (role === 'admin' && username === 'mk' && password === '8078') {
+
+    const adminUser = mockUsers.find(u => u.role === 'admin');
+    const clientUser = mockUsers.find(u => u.role === 'client');
+
+    if (role === 'admin' && username === adminUser?.username && password === adminUser?.password) {
       toast({
         title: 'Login Successful',
         description: 'Welcome back, Admin!',
       });
       router.push('/dashboard');
-    } else if (role === 'client' && username === 'mk' && password === '123') {
+    } else if (role === 'client' && username === clientUser?.username && password === clientUser?.password) {
+        if (!clientUser.canLogin) {
+            setError('Your account is disabled. Please contact an administrator.');
+            toast({
+                title: 'Login Failed',
+                description: 'Your account is disabled.',
+                variant: 'destructive',
+            });
+            return;
+        }
         toast({
             title: 'Login Successful',
             description: 'Welcome back, Client!',

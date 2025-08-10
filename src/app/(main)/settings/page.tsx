@@ -1,6 +1,8 @@
 
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { EmergencyContacts } from '@/components/settings/emergency-contacts';
+import { UserManagement } from '@/components/settings/user-management';
+import { Separator } from '@/components/ui/separator';
 
 export default function SettingsPage() {
     return (
@@ -12,6 +14,18 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent>
                     <EmergencyContacts />
+                </CardContent>
+            </Card>
+
+            <Separator />
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>User Management</CardTitle>
+                    <CardDescription>Manage client login permissions.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <UserManagement />
                 </CardContent>
             </Card>
         </div>

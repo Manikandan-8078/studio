@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter }
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Send, Bot, User, Loader2 } from 'lucide-react';
-import type { ChatHistory } from '@/ai/flows/chatbot-flow';
+import type { ChatHistory } from '@/ai/flows/chatbot-types';
 import { chat } from '@/app/actions/chat';
 import { ChatHistory as ChatHistoryComponent } from '@/components/chatbot/chat-history';
 
@@ -40,8 +40,8 @@ export default function ChatbotPage() {
         setError('The AI returned an empty response.');
       }
     } catch (e) {
-      setError('An error occurred while communicating with the AI.');
       console.error(e);
+      setError('An error occurred while communicating with the AI.');
       // Revert history if the API call fails
       setHistory(history);
     } finally {

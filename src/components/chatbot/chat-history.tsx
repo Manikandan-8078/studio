@@ -1,5 +1,5 @@
 'use client';
-import type { ChatHistory } from '@/ai/flows/chatbot-flow';
+import type { ChatHistory } from '@/ai/flows/chatbot-types';
 import { Bot, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

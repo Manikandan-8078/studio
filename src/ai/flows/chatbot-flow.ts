@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A simple chatbot flow.
@@ -7,25 +8,33 @@
 
 import {ai} from '@/ai/genkit';
 import type {Message, ChatRequest, ChatResponse} from './chatbot-types';
+import type {Part} from 'genkit';
 
 export {type Message, type ChatRequest, type ChatResponse};
 
 export async function chat(input: ChatRequest): Promise<ChatResponse> {
-  const {history, newMessage} = input;
+  const {history, newMessage, imageDataUri} = input;
   const systemPrompt = `You are a helpful AI assistant named Luffy AI.`;
 
-  // The history from the client already includes the latest user message.
   const messages = [
     ...history.map(h => ({
       role: h.role,
       content: [{text: h.content}],
     })),
   ];
+  
+  const userContent: Part[] = [{text: newMessage}];
+  if (imageDataUri) {
+    userContent.push({media: {url: imageDataUri}});
+  }
 
   const response = await ai.generate({
-    prompt: newMessage,
+    prompt: {
+      role: 'user',
+      content: userContent
+    },
     system: systemPrompt,
-    history: messages.slice(0, -1),
+    history: messages,
   });
 
   return {message: {role: 'model', content: response.text}};

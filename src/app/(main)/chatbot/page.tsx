@@ -1,7 +1,7 @@
 
 'use client';
 
-import {useState} from 'react';
+import {useState, useRef} from 'react';
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/card';
 import {ScrollArea} from '@/components/ui/scroll-area';
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
-import {Send, Bot, User, Trash2} from 'lucide-react';
+import {Send, Bot, User, Trash2, Paperclip, X} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import {Skeleton} from '@/components/ui/skeleton';
 import {
@@ -27,15 +27,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import Image from 'next/image';
+
 
 const formSchema = z.object({
-  message: z.string().min(1, 'Message is required'),
+  message: z.string(),
 });
 type FormValues = z.infer<typeof formSchema>;
 
 export default function ChatbotPage() {
   const [history, setHistory] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [image, setImage] = useState<{file: File, preview: string} | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -44,17 +48,42 @@ export default function ChatbotPage() {
     },
   });
 
+  const toBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+    });
+
   async function onSubmit(data: FormValues) {
+    if (!data.message && !image) return;
+
     setIsLoading(true);
-    const userMessage: Message = {role: 'user', content: data.message};
+
+    const userMessageContent = data.message;
+    let imageDataUri: string | undefined = undefined;
+
+    if (image) {
+      imageDataUri = await toBase64(image.file);
+    }
+    
+    const userMessage: Message = {
+      role: 'user', 
+      content: userMessageContent,
+      imageUrl: image?.preview // Use preview for display
+    };
+    
     const newHistory = [...history, userMessage];
     setHistory(newHistory);
     form.reset();
+    setImage(null);
 
     try {
       const response = await chat({
-        history: newHistory,
-        newMessage: data.message,
+        history: newHistory.map(h => ({...h, imageUrl: undefined })), // Don't resend image data in history
+        newMessage: userMessageContent,
+        imageDataUri
       });
       setHistory([...newHistory, response.message]);
     } catch (error) {
@@ -72,6 +101,21 @@ export default function ChatbotPage() {
   const handleClearHistory = () => {
     setHistory([]);
   };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+        const preview = URL.createObjectURL(file);
+        setImage({ file, preview });
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImage(null);
+    if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+    }
+  }
 
   return (
     <TooltipProvider>
@@ -127,6 +171,17 @@ export default function ChatbotPage() {
                           : 'bg-muted'
                       )}
                     >
+                      {message.imageUrl && (
+                        <div className="mb-2">
+                           <Image
+                              src={message.imageUrl}
+                              alt="User upload"
+                              width={200}
+                              height={200}
+                              className="rounded-md"
+                            />
+                        </div>
+                      )}
                       <p>{message.content}</p>
                     </div>
                     {message.role === 'user' && (
@@ -152,21 +207,52 @@ export default function ChatbotPage() {
                 )}
               </div>
             </ScrollArea>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="flex items-center gap-2 border-t pt-4"
-            >
-              <Input
-                {...form.register('message')}
-                placeholder="Type your message..."
-                autoComplete="off"
-                disabled={isLoading}
-              />
-              <Button type="submit" size="icon" disabled={isLoading}>
-                <Send className="h-4 w-4" />
-                <span className="sr-only">Send</span>
-              </Button>
-            </form>
+             <div className="border-t pt-4">
+                {image && (
+                    <div className="relative w-24 h-24 mb-2">
+                        <Image
+                            src={image.preview}
+                            alt="Selected preview"
+                            fill
+                            className="object-cover rounded-md"
+                        />
+                         <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-muted text-muted-foreground"
+                            onClick={handleRemoveImage}
+                        >
+                            <X className="h-4 w-4" />
+                        </Button>
+                    </div>
+                )}
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="flex items-center gap-2"
+                >
+                  <Input
+                    {...form.register('message')}
+                    placeholder="Type your message..."
+                    autoComplete="off"
+                    disabled={isLoading}
+                  />
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleFileChange}
+                    className="hidden" 
+                    accept="image/*"
+                  />
+                  <Button type="button" size="icon" variant="ghost" onClick={() => fileInputRef.current?.click()} disabled={isLoading}>
+                    <Paperclip className="h-4 w-4" />
+                    <span className="sr-only">Attach file</span>
+                  </Button>
+                  <Button type="submit" size="icon" disabled={isLoading}>
+                    <Send className="h-4 w-4" />
+                    <span className="sr-only">Send</span>
+                  </Button>
+                </form>
+             </div>
           </CardContent>
         </Card>
       </div>

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Power, Target, Waves, ShieldCheck, ShieldOff, KeyRound, MessageSquareCode } from 'lucide-react';
+import { Power, Target, Waves, ShieldCheck, ShieldOff, KeyRound, MessageSquareCode, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
@@ -19,6 +19,7 @@ export function SuppressionControls() {
   const [passwordError, setPasswordError] = useState('');
   const [otpError, setOtpError] = useState('');
   const [pendingState, setPendingState] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleOverride = (gun: string) => {
     if (!isSystemActive) {
@@ -47,6 +48,7 @@ export function SuppressionControls() {
       setShowPasswordDialog(false);
       setShowOtpDialog(true);
       setPassword('');
+      setShowPassword(false);
     } else {
       setPasswordError('Incorrect password. Please try again.');
     }
@@ -109,6 +111,7 @@ export function SuppressionControls() {
           setShowPasswordDialog(false);
           setPassword('');
           setPasswordError('');
+          setShowPassword(false);
         }
       }}>
         <DialogContent>
@@ -120,9 +123,28 @@ export function SuppressionControls() {
             </DialogHeader>
             <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <div className="flex items-center space-x-2">
-                    <KeyRound className="w-5 h-5 text-muted-foreground" />
-                    <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter admin password" />
+                <div className="relative">
+                    <div className="flex items-center">
+                        <KeyRound className="absolute left-3 w-5 h-5 text-muted-foreground" />
+                        <Input 
+                          id="password" 
+                          type={showPassword ? "text" : "password"} 
+                          value={password} 
+                          onChange={(e) => setPassword(e.target.value)} 
+                          placeholder="Enter admin password"
+                          className="pl-10" 
+                        />
+                         <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-1 h-7 w-7"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          <span className="sr-only">{showPassword ? 'Hide password' : 'Show password'}</span>
+                        </Button>
+                    </div>
                 </div>
                 {passwordError && <p className="text-sm text-destructive">{passwordError}</p>}
             </div>

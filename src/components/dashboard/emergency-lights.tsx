@@ -52,7 +52,7 @@ export function EmergencyLights() {
         setStatus('Testing');
         toast({
             title: 'Emergency Light Test Initiated',
-            description: 'The system test will run for 30 seconds.'
+            description: 'The system test will run for 15 seconds.'
         });
 
         setTimeout(() => {
@@ -67,13 +67,13 @@ export function EmergencyLights() {
     const getStatusInfo = () => {
         switch (status) {
             case 'Active':
-                return { icon: <Battery className="text-primary animate-pulse" />, label: 'Active - Building Power Lost' };
+                return { icon: <Battery className="text-primary animate-pulse h-6 w-6" />, label: 'Active - Building Power Lost' };
             case 'Testing':
-                return { icon: <WandSparkles className="text-accent" />, label: 'System Self-Test in Progress...' };
+                return { icon: <WandSparkles className="text-accent h-6 w-6" />, label: 'System Self-Test in Progress...' };
             case 'Fault':
-                return { icon: <AlertTriangle className="text-destructive" />, label: 'System Fault Detected' };
+                return { icon: <AlertTriangle className="text-destructive h-6 w-6" />, label: 'System Fault Detected' };
             default: // Charged
-                return { icon: <BatteryCharging className="text-green-500" />, label: 'Fully Charged & Ready' };
+                return { icon: <BatteryCharging className="text-green-500 h-6 w-6" />, label: 'Fully Charged & Ready' };
         }
     }
 
@@ -84,19 +84,19 @@ export function EmergencyLights() {
             <CardHeader>
                 <CardTitle>Emergency Lights</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-2 rounded-md bg-secondary">
-                    <div className="flex items-center gap-3">
+            <CardContent className="space-y-6">
+                <div className="flex items-center justify-between p-4 rounded-lg bg-secondary">
+                    <div className="flex items-center gap-4">
                         {statusInfo.icon}
-                        <span className="font-medium text-secondary-foreground">{statusInfo.label}</span>
+                        <span className="font-semibold text-lg text-secondary-foreground">{statusInfo.label}</span>
                     </div>
                 </div>
-                <div className="space-y-2">
-                     <div className="flex justify-between items-center text-sm">
+                <div className="space-y-3">
+                     <div className="flex justify-between items-center text-sm font-medium">
                         <span className="text-muted-foreground">Battery Level</span>
-                        <span className="font-semibold">{charge}%</span>
+                        <span className="font-bold text-lg">{charge}%</span>
                     </div>
-                    <Progress value={charge} className="h-2" />
+                    <Progress value={charge} className="h-3" />
                 </div>
                 <Button onClick={handleTest} disabled={status !== 'Charged'} className="w-full">
                     <WandSparkles className="mr-2 h-4 w-4" />

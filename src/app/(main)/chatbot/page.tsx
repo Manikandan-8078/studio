@@ -35,7 +35,7 @@ export default function ChatbotPage() {
       });
 
       if (result.message) {
-        setHistory([...newHistory, { role: 'model' as const, content: result.message }]);
+        setHistory([...newHistory, { role: 'model'as const, content: result.message }]);
       } else {
         setError('The AI returned an empty response.');
       }

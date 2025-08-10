@@ -52,8 +52,8 @@ export default function ChatbotPage() {
       content: [{ text: data.message }],
     };
 
-    const newHistory = [...history, userMessage];
-    setHistory(newHistory);
+    const newHistoryWithUserMessage = [...history, userMessage];
+    setHistory(newHistoryWithUserMessage);
     form.reset();
     setIsPending(true);
     scrollToBottom();
@@ -68,14 +68,14 @@ export default function ChatbotPage() {
         role: 'model',
         content: [{ text: response.message }],
       };
-      setHistory([...newHistory, modelMessage]);
+      setHistory([...newHistoryWithUserMessage, modelMessage]);
     } catch (error) {
       console.error('Error fetching chat response:', error);
       const errorMessage: ChatMessage = {
         role: 'model',
         content: [{ text: 'Sorry, something went wrong. Please try again.' }],
       };
-      setHistory([...newHistory, errorMessage]);
+      setHistory([...newHistoryWithUserMessage, errorMessage]);
     } finally {
       setIsPending(false);
       scrollToBottom();

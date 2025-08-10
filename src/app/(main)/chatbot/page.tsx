@@ -1,3 +1,4 @@
+
 'use client';
 
 import {useState} from 'react';
@@ -17,9 +18,15 @@ import {
 } from '@/components/ui/card';
 import {ScrollArea} from '@/components/ui/scroll-area';
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
-import {Send, Bot, User} from 'lucide-react';
+import {Send, Bot, User, Trash2} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import {Skeleton} from '@/components/ui/skeleton';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 const formSchema = z.object({
   message: z.string().min(1, 'Message is required'),
@@ -46,8 +53,8 @@ export default function ChatbotPage() {
 
     try {
       const response = await chat({
-        history: newHistory, // Send the full history including the new message
-        newMessage: data.message, // Kept for consistency, but flow now primarily uses history
+        history: newHistory,
+        newMessage: data.message,
       });
       setHistory([...newHistory, response.message]);
     } catch (error) {
@@ -62,83 +69,107 @@ export default function ChatbotPage() {
     }
   }
 
+  const handleClearHistory = () => {
+    setHistory([]);
+  };
+
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)]">
-      <Card className="flex-1 flex flex-col">
-        <CardHeader>
-          <CardTitle>Luffy AI</CardTitle>
-          <CardDescription>
-            Your creative and helpful collaborator. Ask me anything!
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex-1 flex flex-col gap-4 overflow-hidden">
-          <ScrollArea className="flex-1 pr-4">
-            <div className="space-y-4">
-              {history.map((message, index) => (
-                <div
-                  key={index}
-                  className={cn(
-                    'flex items-start gap-3',
-                    message.role === 'user' ? 'justify-end' : ''
-                  )}
+    <TooltipProvider>
+      <div className="flex flex-col h-[calc(100vh-4rem)]">
+        <Card className="flex-1 flex flex-col">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Luffy AI</CardTitle>
+              <CardDescription>
+                Your creative and helpful collaborator. Ask me anything!
+              </CardDescription>
+            </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleClearHistory}
+                  disabled={history.length === 0}
                 >
-                  {message.role === 'model' && (
+                  <Trash2 className="h-4 w-4" />
+                  <span className="sr-only">Clear History</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Clear History</p>
+              </TooltipContent>
+            </Tooltip>
+          </CardHeader>
+          <CardContent className="flex-1 flex flex-col gap-4 overflow-hidden">
+            <ScrollArea className="flex-1 pr-4">
+              <div className="space-y-4">
+                {history.map((message, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      'flex items-start gap-3',
+                      message.role === 'user' ? 'justify-end' : ''
+                    )}
+                  >
+                    {message.role === 'model' && (
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback>
+                          <Bot />
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                    <div
+                      className={cn(
+                        'rounded-lg px-4 py-2 text-sm max-w-[80%]',
+                        message.role === 'user'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-muted'
+                      )}
+                    >
+                      <p>{message.content}</p>
+                    </div>
+                    {message.role === 'user' && (
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback>
+                          <User />
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                  </div>
+                ))}
+                {isLoading && (
+                  <div className="flex items-start gap-3">
                     <Avatar className="h-8 w-8">
                       <AvatarFallback>
                         <Bot />
                       </AvatarFallback>
                     </Avatar>
-                  )}
-                  <div
-                    className={cn(
-                      'rounded-lg px-4 py-2 text-sm max-w-[80%]',
-                      message.role === 'user'
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted'
-                    )}
-                  >
-                    <p>{message.content}</p>
+                    <div className="rounded-lg px-4 py-2 text-sm bg-muted">
+                      <Skeleton className="w-24 h-4" />
+                    </div>
                   </div>
-                  {message.role === 'user' && (
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback>
-                        <User />
-                      </AvatarFallback>
-                    </Avatar>
-                  )}
-                </div>
-              ))}
-              {isLoading && (
-                <div className="flex items-start gap-3">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback>
-                      <Bot />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="rounded-lg px-4 py-2 text-sm bg-muted">
-                    <Skeleton className="w-24 h-4" />
-                  </div>
-                </div>
-              )}
-            </div>
-          </ScrollArea>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex items-center gap-2 border-t pt-4"
-          >
-            <Input
-              {...form.register('message')}
-              placeholder="Type your message..."
-              autoComplete="off"
-              disabled={isLoading}
-            />
-            <Button type="submit" size="icon" disabled={isLoading}>
-              <Send className="h-4 w-4" />
-              <span className="sr-only">Send</span>
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+                )}
+              </div>
+            </ScrollArea>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex items-center gap-2 border-t pt-4"
+            >
+              <Input
+                {...form.register('message')}
+                placeholder="Type your message..."
+                autoComplete="off"
+                disabled={isLoading}
+              />
+              <Button type="submit" size="icon" disabled={isLoading}>
+                <Send className="h-4 w-4" />
+                <span className="sr-only">Send</span>
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </TooltipProvider>
   );
 }

@@ -103,27 +103,6 @@ export function BuildingMap() {
                 </Link>
                 ))}
             </div>
-             {fireDetected && (
-              <div className="absolute inset-0 pointer-events-none">
-                {/* Exit Icons */}
-                <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-center pointer-events-auto">
-                    <DoorOpen className="h-8 w-8 mx-auto text-green-500" />
-                    <p className="text-xs font-bold text-green-500">EXIT A</p>
-                </div>
-                 <div className="absolute -top-10 right-4 text-center pointer-events-auto">
-                    <DoorOpen className="h-8 w-8 mx-auto text-green-500" />
-                    <p className="text-xs font-bold text-green-500">EXIT B</p>
-                </div>
-
-                {/* Evacuation Path */}
-                 <div className="absolute top-[25%] left-[50%] animate-pulse">
-                    <ChevronsRight className="w-12 h-12 text-green-400 -rotate-90" />
-                </div>
-                <div className="absolute top-[58%] left-[58%] animate-pulse">
-                    <ChevronsRight className="w-12 h-12 text-green-400 -rotate-90" />
-                </div>
-              </div>
-            )}
           </div>
         </CardContent>
       </Card>

@@ -66,11 +66,9 @@ export function MainLayout({ children }: { children: ReactNode }) {
                 <DropdownMenuItem>Billing</DropdownMenuItem>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/login">
+                <DropdownMenuItem>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Logout</span>
-                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -97,11 +95,9 @@ export function MainLayout({ children }: { children: ReactNode }) {
           <SidebarFooter>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Logout">
-                  <Link href="/login">
-                    <LogOut />
-                    <span>Logout</span>
-                  </Link>
+                <SidebarMenuButton tooltip="Logout">
+                  <LogOut />
+                  <span>Logout</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -112,7 +108,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
             <SidebarTrigger className="md:hidden" />
             <div className='flex-1'>
                 <h1 className="text-lg font-semibold capitalize">
-                {pathname.substring(1).split('/')[0] || 'Dashboard'}
+                {pathname.substring(1) || 'Dashboard'}
                 </h1>
             </div>
           </header>

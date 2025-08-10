@@ -125,7 +125,7 @@ export default function LoginPage() {
           {error && <p className="text-sm text-center text-destructive">{error}</p>}
         </CardContent>
         <CardFooter>
-          <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" onClick={handleLogin}>
+          <Button className="w-full" onClick={handleLogin}>
             <LogIn className="mr-2 h-4 w-4" />
             Login
           </Button>

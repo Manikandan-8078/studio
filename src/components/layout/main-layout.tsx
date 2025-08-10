@@ -21,7 +21,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 
 const menuItems = [
-  { href: '/', label: 'Dashboard', icon: Home },
+  { href: '/dashboard', label: 'Dashboard', icon: Home },
   { href: '/incidents', label: 'Incidents', icon: History },
   { href: '/messaging', label: 'Messaging', icon: MessageSquare },
   { href: '/chatbot', label: 'Chatbot', icon: BotMessageSquare },
@@ -66,9 +66,11 @@ export function MainLayout({ children }: { children: ReactNode }) {
                 <DropdownMenuItem>Billing</DropdownMenuItem>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Logout</span>
+                <DropdownMenuItem asChild>
+                    <Link href="/login">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Logout</span>
+                    </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -95,9 +97,11 @@ export function MainLayout({ children }: { children: ReactNode }) {
           <SidebarFooter>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Logout">
-                  <LogOut />
-                  <span>Logout</span>
+                <SidebarMenuButton tooltip="Logout" asChild>
+                  <Link href="/login">
+                    <LogOut />
+                    <span>Logout</span>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -108,7 +112,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
             <SidebarTrigger className="md:hidden" />
             <div className='flex-1'>
                 <h1 className="text-lg font-semibold capitalize">
-                {pathname.substring(1) || 'Dashboard'}
+                {pathname.substring(1).split('/')[0] || 'Dashboard'}
                 </h1>
             </div>
           </header>

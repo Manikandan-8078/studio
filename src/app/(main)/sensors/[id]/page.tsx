@@ -1,3 +1,4 @@
+
 import { mockSensorDetails } from '@/lib/mock-data';
 import { notFound } from 'next/navigation';
 import { SensorDetail } from '@/components/sensors/sensor-detail';

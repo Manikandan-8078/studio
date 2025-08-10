@@ -5,6 +5,12 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { SafetyRecommendations } from '@/components/incidents/safety-recommendations';
 
+export function generateStaticParams() {
+  return mockIncidents.map((incident) => ({
+    id: incident.id,
+  }));
+}
+
 export default function IncidentDetailPage({ params }: { params: { id: string } }) {
   const incident = mockIncidents.find((i) => i.id === params.id);
 

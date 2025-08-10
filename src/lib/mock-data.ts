@@ -1,4 +1,4 @@
-import type { Incident, EmergencyContact } from './types';
+import type { Incident, EmergencyContact, Zone } from './types';
 
 export const mockIncidents: Incident[] = [
   {
@@ -23,4 +23,13 @@ export const mockContacts: EmergencyContact[] = [
     { id: 'con-001', name: 'John Doe', role: 'Building Manager', phone: '555-0101', email: 'john.doe@example.com' },
     { id: 'con-002', name: 'Jane Smith', role: 'Head of Security', phone: '555-0102', email: 'jane.smith@example.com' },
     { id: 'con-003', name: 'Local Fire Dept.', role: 'Emergency Service', phone: '911', email: 'dispatch@localfire.gov' },
+];
+
+export const mockZones: Zone[] = [
+  { id: 'zone-1', name: 'Lobby', status: 'normal', temp: 22, sensors: [{name: 'Smoke', status: 'Active'}, {name: 'Thermal', status: 'Active'}] },
+  { id: 'zone-2', name: 'Office A', status: 'normal', temp: 23, sensors: [{name: 'Smoke', status: 'Active'}, {name: 'Thermal', status: 'Active'}] },
+  { id: 'zone-3', name: 'Office B', status: 'normal', temp: 23, sensors: [{name: 'Smoke', status: 'Active'}, {name: 'Thermal', status: 'Active'}] },
+  { id: 'zone-4', name: 'Server Room', status: 'normal', temp: 25, sensors: [{name: 'Smoke', status: 'Active'}, {name: 'Thermal', status: 'Active'}, {name: 'Electrical', status: 'Active'}] },
+  { id: 'zone-5', name: 'Kitchen', status: 'normal', temp: 24, sensors: [{name: 'Smoke', status: 'Active'}, {name: 'Thermal', status: 'Active'}, {name: 'Chemical', status: 'Active'}] },
+  { id: 'zone-6', name: 'Warehouse', status: 'normal', temp: 20, sensors: [{name: 'Smoke', status: 'Active'}, {name: 'Thermal', status: 'Active'}] },
 ];

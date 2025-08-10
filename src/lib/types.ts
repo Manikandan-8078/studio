@@ -15,3 +15,18 @@ export interface EmergencyContact {
   phone: string;
   email: string;
 }
+
+export type ZoneStatus = 'normal' | 'warning' | 'critical';
+
+export interface Sensor {
+    name: string;
+    status: string;
+}
+
+export interface Zone {
+  id: string;
+  name: string;
+  status: ZoneStatus;
+  temp: number;
+  sensors: Sensor[];
+}

@@ -12,7 +12,7 @@ import {
   SidebarMenuButton,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-import { Shield, Home, History, Settings, MessageSquare, LogOut, User } from 'lucide-react';
+import { Shield, Home, History, Settings, MessageSquare, LogOut, User, Bot } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -23,6 +23,7 @@ const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: Home },
   { href: '/incidents', label: 'Incidents', icon: History },
   { href: '/messaging', label: 'Messaging', icon: MessageSquare },
+  { href: '/chatbot', label: 'Chatbot', icon: Bot },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
 
@@ -79,7 +80,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname === item.href}
+                    isActive={pathname.startsWith(item.href)}
                     tooltip={item.label}
                   >
                     <Link href={item.href}>

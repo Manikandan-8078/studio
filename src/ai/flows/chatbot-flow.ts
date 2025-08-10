@@ -23,7 +23,7 @@ export async function chat(input: ChatRequest): Promise<ChatResponse> {
   ];
 
   const {output} = await ai.generate({
-    prompt: messages,
+    prompt: newMessage,
     system: systemPrompt,
     history: messages.slice(0, -1),
   });

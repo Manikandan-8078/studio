@@ -6,10 +6,9 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-import {Message, ChatRequest, ChatResponse} from './chatbot-types';
+import type {Message, ChatRequest, ChatResponse} from './chatbot-types';
 
-export {Message, ChatRequest, ChatResponse};
+export {type Message, type ChatRequest, type ChatResponse};
 
 export async function chat(input: ChatRequest): Promise<ChatResponse> {
   const {history, newMessage} = input;

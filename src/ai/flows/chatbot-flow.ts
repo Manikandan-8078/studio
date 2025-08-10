@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -30,7 +31,13 @@ export async function chat(input: ChatInput): Promise<ChatOutput> {
 
 const prompt = ai.definePrompt({
   name: 'chatbotPrompt',
-  input: {schema: ChatInputSchema},
+  input: {schema: z.object({
+    history: z.array(z.object({
+      role: z.enum(['user', 'model']),
+      content: z.array(z.object({ text: z.string() })),
+    })),
+    message: z.string(),
+  })},
   output: {schema: ChatOutputSchema},
   prompt: `You are Luffy AI, a helpful AI assistant.
 
@@ -51,8 +58,15 @@ const chatFlow = ai.defineFlow(
     inputSchema: ChatInputSchema,
     outputSchema: ChatOutputSchema,
   },
-  async input => {
-    const {output} = await prompt(input);
+  async (input) => {
+    const { history, message } = input;
+    // The prompt expects the history to not include the current message
+    const aipromptHistory = history.slice(0, -1);
+    
+    const {output} = await prompt({
+        history: aipromptHistory,
+        message: message,
+    });
     return output!;
   }
 );

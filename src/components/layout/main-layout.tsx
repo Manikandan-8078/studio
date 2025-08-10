@@ -22,10 +22,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: Home },
-  { href: '/incidents', label: 'Incidents', icon: History },
-  { href: '/messaging', label: 'Messaging', icon: MessageSquare },
   { href: '/emergency-lights', label: 'Emergency Lights', icon: Lightbulb },
   { href: '/alarms', label: 'Alarms', icon: Siren },
+  { href: '/incidents', label: 'Incidents', icon: History },
+  { href: '/messaging', label: 'Messaging', icon: MessageSquare },
   { href: '/chatbot', label: 'Luffy AI', icon: Bot },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];

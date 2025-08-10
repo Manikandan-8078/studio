@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import type { SensorDetail } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { Thermometer, Wind, Beaker, Zap, RadioTower, Image as ImageIcon, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { Thermometer, Wind, Beaker, Zap, RadioTower, Image as ImageIcon, AlertTriangle, ShieldCheck, Wifi, Bluetooth } from 'lucide-react';
 
 const iconMap = {
     Thermal: Thermometer,
@@ -13,7 +13,9 @@ const iconMap = {
     Chemical: Beaker,
     Electrical: Zap,
     Motion: RadioTower,
-    Image: ImageIcon
+    Image: ImageIcon,
+    WiFi: Wifi,
+    Bluetooth: Bluetooth
 };
 
 export function SensorDetail({ sensor }: { sensor: SensorDetail }) {

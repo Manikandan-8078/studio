@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { ShieldCheck, Siren, BellOff, BellRing, Dot } from 'lucide-react';
+import { ShieldCheck, Siren, BellOff, BellRing, Wifi, Dot } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,6 +36,8 @@ export function AlarmPanel() {
     const { toast } = useToast();
     const [status, setStatus] = useState<AlarmStatus>('All Clear');
     const [zones, setZones] = useState(alarmZones);
+    const [connectivity, setConnectivity] = useState('Online');
+
 
      useEffect(() => {
         // Simulate fire event activation
@@ -109,22 +111,36 @@ export function AlarmPanel() {
                     </div>
                 </div>
                 
-                <div>
-                    <h4 className="text-lg font-semibold mb-2">Zone Status</h4>
-                     <div className="border rounded-lg">
-                        {zones.map((zone, index) => (
-                           <div key={zone.id}>
-                             <div className="flex items-center justify-between p-3">
-                                 <span className="font-medium">{zone.name}</span>
-                                 <Badge variant={zone.status === 'Triggered' ? 'destructive' : 'secondary'}>
-                                    {zone.status}
-                                </Badge>
-                             </div>
-                             {index < zones.length - 1 && <Separator />}
-                           </div>
-                        ))}
-                     </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 className="text-lg font-semibold mb-2">Zone Status</h4>
+                         <div className="border rounded-lg">
+                            {zones.map((zone, index) => (
+                               <div key={zone.id}>
+                                 <div className="flex items-center justify-between p-3">
+                                     <span className="font-medium">{zone.name}</span>
+                                     <Badge variant={zone.status === 'Triggered' ? 'destructive' : 'secondary'}>
+                                        {zone.status}
+                                    </Badge>
+                                 </div>
+                                 {index < zones.length - 1 && <Separator />}
+                               </div>
+                            ))}
+                         </div>
+                    </div>
+                    <div>
+                        <h4 className="text-lg font-semibold mb-2">Connectivity Status</h4>
+                        <div className="flex items-center justify-between p-3 rounded-lg border">
+                            <div className='flex items-center gap-2'>
+                                 <Wifi className="h-5 w-5 text-muted-foreground" />
+                                 <span className="font-medium">System Network</span>
+                            </div>
+                            <Badge variant={connectivity === 'Online' ? 'secondary' : 'destructive'}>{connectivity}</Badge>
+                        </div>
+                    </div>
                 </div>
+
+                <Separator />
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                      <AlertDialog>

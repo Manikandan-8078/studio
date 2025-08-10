@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Thermometer, Wind, Beaker, Zap, RadioTower, Image } from 'lucide-react';
+import { Thermometer, Wind, Beaker, Zap, RadioTower, Image, Wifi, Bluetooth } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -15,6 +15,8 @@ const initialSensors = [
   { name: 'Electrical', icon: Zap, status: 'Active' },
   { name: 'Motion', icon: RadioTower, status: 'Active' },
   { name: 'Image', icon: Image, status: 'Active' },
+  { name: 'WiFi', icon: Wifi, status: 'Active' },
+  { name: 'Bluetooth', icon: Bluetooth, status: 'Active' },
 ];
 
 export function SensorStatus() {

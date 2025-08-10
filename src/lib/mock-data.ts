@@ -59,6 +59,18 @@ const generateHistory = (unit: string, normalValue: number, eventValue: number) 
     });
 };
 
+const generateConnectivityHistory = (normalValue: number, eventValue: number) => {
+    return Array.from({ length: 24 }, (_, i) => {
+        const time = `${String(i).padStart(2, '0')}:00`;
+        let value = normalValue + (Math.random() * 5); // Normal fluctuation
+        if (i === 14) { // Simulate drop
+            value = eventValue;
+        }
+        return { time, value: parseFloat(value.toFixed(1)) };
+    });
+};
+
+
 export const mockSensorDetails: Record<string, SensorDetail> = {
     thermal: {
         id: 'thermal-001',
@@ -113,5 +125,23 @@ export const mockSensorDetails: Record<string, SensorDetail> = {
         operationalSince: '2023-01-15',
         currentReading: { value: 1, unit: 'active feed' },
         history: generateHistory('active feed', 1, 1)
-    }
+    },
+    wifi: {
+        id: 'wifi-001',
+        type: 'WiFi',
+        status: 'Active',
+        lastCheckIn: '2024-07-28 14:33:00',
+        operationalSince: '2023-05-20',
+        currentReading: { value: -45, unit: 'dBm' },
+        history: generateConnectivityHistory(-50, -85)
+    },
+    bluetooth: {
+        id: 'ble-001',
+        type: 'Bluetooth',
+        status: 'Active',
+        lastCheckIn: '2024-07-28 14:33:00',
+        operationalSince: '2023-05-20',
+        currentReading: { value: -60, unit: 'dBm' },
+        history: generateConnectivityHistory(-60, -90)
+    },
 };

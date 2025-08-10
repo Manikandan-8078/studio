@@ -5,8 +5,10 @@ import { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { BatteryCharging, Battery, AlertTriangle, WandSparkles, PowerOff, Power } from 'lucide-react';
+import { BatteryCharging, Battery, AlertTriangle, WandSparkles, PowerOff, Power, Wifi } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { Separator } from '../ui/separator';
+import { Badge } from '../ui/badge';
 
 type LightStatus = 'Charged' | 'Active' | 'Testing' | 'Fault' | 'Off';
 
@@ -14,6 +16,7 @@ export function EmergencyLightsPanel() {
     const { toast } = useToast();
     const [status, setStatus] = useState<LightStatus>('Charged');
     const [charge, setCharge] = useState(100);
+    const [connectivity, setConnectivity] = useState('Online');
 
     useEffect(() => {
         // Simulate fire event activation
@@ -122,14 +125,29 @@ export function EmergencyLightsPanel() {
                         <span className="font-semibold text-lg text-secondary-foreground">{statusInfo.label}</span>
                     </div>
                 </div>
-                <div className="space-y-3">
+
+                <div className="space-y-4">
                      <div className="flex justify-between items-center text-sm font-medium">
                         <span className="text-muted-foreground">Battery Level</span>
                         <span className="font-bold text-lg">{status === 'Off' ? '--' : `${charge}%`}</span>
                     </div>
                     <Progress value={status === 'Off' ? 0 : charge} className="h-3" />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <Separator />
+
+                <div>
+                    <h4 className="text-lg font-semibold mb-2">Connectivity Status</h4>
+                    <div className="flex items-center justify-between p-3 rounded-lg border">
+                        <div className='flex items-center gap-2'>
+                             <Wifi className="h-5 w-5 text-muted-foreground" />
+                             <span className="font-medium">System Network</span>
+                        </div>
+                        <Badge variant={connectivity === 'Online' ? 'secondary' : 'destructive'}>{connectivity}</Badge>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                     {status === 'Off' ? (
                          <Button onClick={handlePowerOn} className="w-full bg-green-600 hover:bg-green-700">
                             <Power className="mr-2 h-4 w-4" />

@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Thermometer, Wind, Beaker, Zap, RadioTower, Image } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 const initialSensors = [
   { name: 'Thermal', icon: Thermometer, status: 'Active' },
@@ -43,9 +44,13 @@ export function SensorStatus() {
       <CardHeader>
         <CardTitle>Sensor Status</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-2">
         {sensors.map((sensor) => (
-          <div key={sensor.name} className="flex items-center justify-between">
+          <Link 
+            href={`/sensors/${sensor.name.toLowerCase()}`}
+            key={sensor.name} 
+            className="flex items-center justify-between p-2 rounded-md hover:bg-secondary transition-colors"
+          >
             <div className="flex items-center gap-3">
               <sensor.icon className={cn("w-5 h-5 text-muted-foreground", sensor.status === 'Triggered' && "text-primary")} />
               <span className="font-medium">{sensor.name}</span>
@@ -53,7 +58,7 @@ export function SensorStatus() {
             <Badge variant={sensor.status === 'Triggered' ? 'destructive' : 'secondary'}>
               {sensor.status}
             </Badge>
-          </div>
+          </Link>
         ))}
       </CardContent>
     </Card>

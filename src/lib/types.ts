@@ -30,3 +30,16 @@ export interface Zone {
   temp: number;
   sensors: Sensor[];
 }
+
+export interface SensorDetail {
+    id: string;
+    type: string;
+    status: 'Active' | 'Warning' | 'Triggered';
+    lastCheckIn: string;
+    operationalSince: string;
+    currentReading: {
+        value: number;
+        unit: string;
+    };
+    history: { time: string; value: number }[];
+}

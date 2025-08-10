@@ -1,4 +1,4 @@
-import type { Incident, EmergencyContact, Zone } from './types';
+import type { Incident, EmergencyContact, Zone, SensorDetail } from './types';
 
 export const mockIncidents: Incident[] = [
   {
@@ -42,3 +42,71 @@ export const mockZones: Zone[] = [
   { id: 'zone-5', name: 'Kitchen', status: 'normal', temp: 24, sensors: JSON.parse(JSON.stringify(allSensors))},
   { id: 'zone-6', name: 'Warehouse', status: 'normal', temp: 20, sensors: JSON.parse(JSON.stringify(allSensors))},
 ];
+
+const generateHistory = (unit: string, normalValue: number, eventValue: number) => {
+    return Array.from({ length: 24 }, (_, i) => {
+        const time = `${String(i).padStart(2, '0')}:00`;
+        let value = normalValue + (Math.random() - 0.5) * 2;
+        if (i >= 13 && i <= 15) { // Simulate event
+            value = eventValue + (Math.random() - 0.5) * 5;
+        }
+        return { time, value: parseFloat(value.toFixed(1)) };
+    });
+};
+
+export const mockSensorDetails: Record<string, SensorDetail> = {
+    thermal: {
+        id: 'thermal-001',
+        type: 'Thermal',
+        status: 'Triggered',
+        lastCheckIn: '2024-07-28 14:32:05',
+        operationalSince: '2023-01-15',
+        currentReading: { value: 75, unit: '°C' },
+        history: generateHistory('°C', 25, 75)
+    },
+    smoke: {
+        id: 'smoke-001',
+        type: 'Smoke',
+        status: 'Triggered',
+        lastCheckIn: '2024-07-28 14:32:10',
+        operationalSince: '2023-01-15',
+        currentReading: { value: 350, unit: 'ppm' },
+        history: generateHistory('ppm', 50, 350)
+    },
+    chemical: {
+        id: 'chem-001',
+        type: 'Chemical',
+        status: 'Active',
+        lastCheckIn: '2024-07-28 14:30:00',
+        operationalSince: '2023-01-15',
+        currentReading: { value: 5, unit: 'ppm' },
+        history: generateHistory('ppm', 5, 10)
+    },
+    electrical: {
+        id: 'elec-001',
+        type: 'Electrical',
+        status: 'Active',
+        lastCheckIn: '2024-07-28 14:30:00',
+        operationalSince: '2023-01-15',
+        currentReading: { value: 240, unit: 'V' },
+        history: generateHistory('V', 240, 245)
+    },
+    motion: {
+        id: 'motion-001',
+        type: 'Motion',
+        status: 'Active',
+        lastCheckIn: '2024-07-28 14:30:00',
+        operationalSince: '2023-01-15',
+        currentReading: { value: 0, unit: 'detections' },
+        history: generateHistory('detections', 0, 1)
+    },
+    image: {
+        id: 'image-001',
+        type: 'Image',
+        status: 'Active',
+        lastCheckIn: '2024-07-28 14:30:00',
+        operationalSince: '2023-01-15',
+        currentReading: { value: 1, unit: 'active feed' },
+        history: generateHistory('active feed', 1, 1)
+    }
+};

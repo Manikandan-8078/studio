@@ -25,11 +25,20 @@ export const mockContacts: EmergencyContact[] = [
     { id: 'con-003', name: 'Local Fire Dept.', role: 'Emergency Service', phone: '911', email: 'dispatch@localfire.gov' },
 ];
 
+const allSensors = [
+    { name: 'Thermal', status: 'Active' },
+    { name: 'Smoke', status: 'Active' },
+    { name: 'Electrical', status: 'Active' },
+    { name: 'Chemical', status: 'Active' },
+    { name: 'Motion', status: 'Active' },
+    { name: 'Image', status: 'Active' },
+];
+
 export const mockZones: Zone[] = [
-  { id: 'zone-1', name: 'Lobby', status: 'normal', temp: 22, sensors: [{name: 'Smoke', status: 'Active'}, {name: 'Thermal', status: 'Active'}] },
-  { id: 'zone-2', name: 'Office A', status: 'normal', temp: 23, sensors: [{name: 'Smoke', status: 'Active'}, {name: 'Thermal', status: 'Active'}] },
-  { id: 'zone-3', name: 'Office B', status: 'normal', temp: 23, sensors: [{name: 'Smoke', status: 'Active'}, {name: 'Thermal', status: 'Active'}] },
-  { id: 'zone-4', name: 'Server Room', status: 'normal', temp: 25, sensors: [{name: 'Smoke', status: 'Active'}, {name: 'Thermal', status: 'Active'}, {name: 'Electrical', status: 'Active'}] },
-  { id: 'zone-5', name: 'Kitchen', status: 'normal', temp: 24, sensors: [{name: 'Smoke', status: 'Active'}, {name: 'Thermal', status: 'Active'}, {name: 'Chemical', status: 'Active'}] },
-  { id: 'zone-6', name: 'Warehouse', status: 'normal', temp: 20, sensors: [{name: 'Smoke', status: 'Active'}, {name: 'Thermal', status: 'Active'}] },
+  { id: 'zone-1', name: 'Lobby', status: 'normal', temp: 22, sensors: JSON.parse(JSON.stringify(allSensors))},
+  { id: 'zone-2', name: 'Office A', status: 'normal', temp: 23, sensors: JSON.parse(JSON.stringify(allSensors))},
+  { id: 'zone-3', name: 'Office B', status: 'normal', temp: 23, sensors: JSON.parse(JSON.stringify(allSensors))},
+  { id: 'zone-4', name: 'Server Room', status: 'normal', temp: 25, sensors: JSON.parse(JSON.stringify(allSensors))},
+  { id: 'zone-5', name: 'Kitchen', status: 'normal', temp: 24, sensors: JSON.parse(JSON.stringify(allSensors))},
+  { id: 'zone-6', name: 'Warehouse', status: 'normal', temp: 20, sensors: JSON.parse(JSON.stringify(allSensors))},
 ];

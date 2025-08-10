@@ -2,13 +2,25 @@ import { mockZones } from '@/lib/mock-data';
 import { notFound } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { Flame, Thermometer, Wind, Beaker, Zap } from 'lucide-react';
+import { Thermometer, Wind, Zap, Beaker, RadioTower, Image } from 'lucide-react';
 
 export default function ZoneDetailPage({ params }: { params: { id: string } }) {
   const zone = mockZones.find((z) => z.id === params.id);
 
   if (!zone) {
     notFound();
+  }
+
+  const getSensorIcon = (sensorName: string) => {
+    switch (sensorName) {
+        case 'Thermal': return <Thermometer className="w-4 h-4 text-muted-foreground" />;
+        case 'Smoke': return <Wind className="w-4 h-4 text-muted-foreground" />;
+        case 'Electrical': return <Zap className="w-4 h-4 text-muted-foreground" />;
+        case 'Chemical': return <Beaker className="w-4 h-4 text-muted-foreground" />;
+        case 'Motion': return <RadioTower className="w-4 h-4 text-muted-foreground" />;
+        case 'Image': return <Image className="w-4 h-4 text-muted-foreground" />;
+        default: return null;
+    }
   }
 
   return (
@@ -50,10 +62,7 @@ export default function ZoneDetailPage({ params }: { params: { id: string } }) {
                         {zone.sensors.map(sensor => (
                             <li key={sensor.name} className="flex items-center justify-between text-sm">
                                 <span className="flex items-center gap-2">
-                                    {sensor.name === 'Smoke' && <Wind className="w-4 h-4 text-muted-foreground" />}
-                                    {sensor.name === 'Thermal' && <Thermometer className="w-4 h-4 text-muted-foreground" />}
-                                    {sensor.name === 'Electrical' && <Zap className="w-4 h-4 text-muted-foreground" />}
-                                    {sensor.name === 'Chemical' && <Beaker className="w-4 h-4 text-muted-foreground" />}
+                                    {getSensorIcon(sensor.name)}
                                     {sensor.name}
                                 </span>
                                  <span className={cn('font-medium', {'text-green-500': sensor.status === 'Active', 'text-red-500': sensor.status === 'Triggered'})}>

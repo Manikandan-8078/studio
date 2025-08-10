@@ -7,15 +7,17 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarTrigger,
-  SidebarInset,
-  SidebarMenu,
   SidebarMenuItem,
+  SidebarMenu,
   SidebarMenuButton,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-import { Shield, Home, History, Settings, MessageSquare, LogOut, BotMessageSquare } from 'lucide-react';
+import { Shield, Home, History, Settings, MessageSquare, LogOut, BotMessageSquare, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: Home },
@@ -33,10 +35,42 @@ export function MainLayout({ children }: { children: ReactNode }) {
       <div className="group flex min-h-screen w-full" data-variant="sidebar">
         <Sidebar>
           <SidebarHeader className="group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0 transition-all duration-200">
-            <div className="flex items-center gap-2">
-              <Shield className="text-primary size-8" />
-              <h1 className="text-xl font-semibold">Inferno Shield</h1>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                  <div className="flex items-center gap-2 cursor-pointer p-2 rounded-md hover:bg-sidebar-accent">
+                    <Shield className="text-primary size-8" />
+                    <div className="flex flex-col">
+                      <h1 className="text-xl font-semibold">Inferno Shield</h1>
+                      <p className="text-sm text-muted-foreground">Admin</p>
+                    </div>
+                  </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex items-center gap-2">
+                    <Avatar>
+                      <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="user avatar" />
+                      <AvatarFallback><User /></AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">Admin User</p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        admin@inferno.shield
+                      </p>
+                    </div>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Billing</DropdownMenuItem>
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </SidebarHeader>
           <SidebarContent>
             <SidebarMenu>

@@ -54,7 +54,7 @@ export function SuppressionControls() {
 
   const handleOtpSubmit = () => {
     // In a real app, you'd verify the OTP against a backend.
-    if (otp === '123456') {
+    if (otp === '12345') {
       setOtpError('');
       setShowOtpDialog(false);
       setIsSystemActive(pendingState);

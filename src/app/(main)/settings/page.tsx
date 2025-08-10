@@ -9,11 +9,11 @@ export default function SettingsPage() {
         <div className="space-y-6">
             <Card>
                 <CardHeader>
-                    <CardTitle>Emergency Contacts</CardTitle>
-                    <CardDescription>Manage the list of contacts to be notified during an incident.</CardDescription>
+                    <CardTitle>User Management</CardTitle>
+                    <CardDescription>Manage client login permissions.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <EmergencyContacts />
+                    <UserManagement />
                 </CardContent>
             </Card>
 
@@ -21,11 +21,11 @@ export default function SettingsPage() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>User Management</CardTitle>
-                    <CardDescription>Manage client login permissions.</CardDescription>
+                    <CardTitle>Emergency Contacts</CardTitle>
+                    <CardDescription>Manage the list of contacts to be notified during an incident.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <UserManagement />
+                    <EmergencyContacts />
                 </CardContent>
             </Card>
         </div>

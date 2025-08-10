@@ -66,9 +66,9 @@ export default function ChatbotPage() {
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       <Card className="flex-1 flex flex-col">
         <CardHeader>
-          <CardTitle>AI Chatbot</CardTitle>
+          <CardTitle>Gemini AI</CardTitle>
           <CardDescription>
-            Your general-purpose AI assistant. Ask me anything!
+            Your creative and helpful collaborator. Ask me anything!
           </CardDescription>
         </CardHeader>
         <CardContent className="flex-1 flex flex-col gap-4 overflow-hidden">

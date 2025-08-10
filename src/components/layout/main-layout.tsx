@@ -23,7 +23,7 @@ const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: Home },
   { href: '/incidents', label: 'Incidents', icon: History },
   { href: '/messaging', label: 'Messaging', icon: MessageSquare },
-  { href: '/chatbot', label: 'Chatbot', icon: Bot },
+  { href: '/chatbot', label: 'Gemini AI', icon: Bot },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
 

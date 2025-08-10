@@ -12,7 +12,7 @@ export {type Message, type ChatRequest, type ChatResponse};
 
 export async function chat(input: ChatRequest): Promise<ChatResponse> {
   const {history, newMessage} = input;
-  const systemPrompt = `You are a helpful AI assistant.`;
+  const systemPrompt = `You are a helpful AI assistant named Gemini AI.`;
 
   // The history from the client already includes the latest user message.
   const messages = [
@@ -23,14 +23,9 @@ export async function chat(input: ChatRequest): Promise<ChatResponse> {
   ];
 
   const {output} = await ai.generate({
-    prompt: [
-      {role: 'system', content: [{text: systemPrompt}]},
-      ...messages,
-    ],
-    history: messages.slice(0, -1).map(h => ({
-      role: h.role,
-      content: h.content,
-    })),
+    prompt: messages,
+    system: systemPrompt,
+    history: messages.slice(0, -1),
   });
 
   return {message: {role: 'model', content: output!.text}};

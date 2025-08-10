@@ -16,12 +16,10 @@ export async function chat(input: ChatRequest): Promise<ChatResponse> {
   const {history, newMessage, imageDataUri} = input;
   const systemPrompt = `You are a helpful AI assistant named Luffy AI.`;
 
-  const messages = [
-    ...history.map(h => ({
+  const messages = history.map(h => ({
       role: h.role,
       content: [{text: h.content}],
-    })),
-  ];
+  }));
   
   const userContent: Part[] = [{text: newMessage}];
   if (imageDataUri) {

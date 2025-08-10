@@ -32,7 +32,7 @@ export default function LoginPage() {
   const handleLogin = () => {
     setError('');
     // Hardcoded credentials for demonstration
-    if (role === 'admin' && username === 'admin' && password === 'password') {
+    if (role === 'admin' && username === 'mk' && password === '8078') {
       toast({
         title: 'Login Successful',
         description: 'Welcome back, Admin!',

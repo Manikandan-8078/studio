@@ -1,11 +1,10 @@
 import { mockZones } from '@/lib/mock-data';
 import { notFound } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
-import { Thermometer, Wind, Zap, Beaker, RadioTower, Image } from 'lucide-react';
 import { SuppressionControls } from '@/components/dashboard/suppression-controls';
 import { SensorStatus } from '@/components/dashboard/sensor-status';
 import { LiveFeed } from '@/components/dashboard/live-feed';
+import { CurrentStatus } from '@/components/zones/current-status';
 
 
 export default function ZoneDetailPage({ params }: { params: { id: string } }) {
@@ -13,18 +12,6 @@ export default function ZoneDetailPage({ params }: { params: { id: string } }) {
 
   if (!zone) {
     notFound();
-  }
-
-  const getSensorIcon = (sensorName: string) => {
-    switch (sensorName) {
-        case 'Thermal': return <Thermometer className="w-4 h-4 text-muted-foreground" />;
-        case 'Smoke': return <Wind className="w-4 h-4 text-muted-foreground" />;
-        case 'Electrical': return <Zap className="w-4 h-4 text-muted-foreground" />;
-        case 'Chemical': return <Beaker className="w-4 h-4 text-muted-foreground" />;
-        case 'Motion': return <RadioTower className="w-4 h-4 text-muted-foreground" />;
-        case 'Image': return <Image className="w-4 h-4 text-muted-foreground" />;
-        default: return null;
-    }
   }
 
   return (
@@ -39,10 +26,11 @@ export default function ZoneDetailPage({ params }: { params: { id: string } }) {
             <CardContent className="grid gap-6 lg:grid-cols-3">
                 <div className="lg:col-span-2 space-y-6">
                     <SuppressionControls />
+                    <LiveFeed />
                 </div>
                 <div className="lg:col-span-1 space-y-6">
+                    <CurrentStatus zone={zone} />
                     <SensorStatus />
-                    <LiveFeed />
                 </div>
             </CardContent>
         </Card>

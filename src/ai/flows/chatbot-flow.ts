@@ -12,7 +12,7 @@ export {type Message, type ChatRequest, type ChatResponse};
 
 export async function chat(input: ChatRequest): Promise<ChatResponse> {
   const {history, newMessage} = input;
-  const systemPrompt = `You are a helpful AI assistant named Gemini AI.`;
+  const systemPrompt = `You are a helpful AI assistant named Luffy AI.`;
 
   // The history from the client already includes the latest user message.
   const messages = [

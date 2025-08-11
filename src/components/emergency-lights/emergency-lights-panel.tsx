@@ -32,11 +32,21 @@ export function EmergencyLightsPanel() {
             }
         }
 
+        const simulationInterval = setInterval(() => {
+            const alarmPanel = document.querySelector('.text-destructive.animate-pulse');
+            if(alarmPanel) {
+                setStatus('Active');
+            } else {
+                setStatus('Charged');
+            }
+        }, 1000);
+
 
         return () => {
             if (chargeInterval) {
                 clearInterval(chargeInterval);
             }
+            clearInterval(simulationInterval);
         };
     }, [status, charge]);
 

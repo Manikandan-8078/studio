@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -24,8 +25,41 @@ export function BuildingMap() {
       }));
     }, 3000);
 
+    const simulationInterval = setInterval(() => {
+        setMapZones(prevZones => {
+            const warehouseIndex = prevZones.findIndex(z => z.id === 'zone-6');
+            if (warehouseIndex === -1) return prevZones;
+
+            const newZones = [...prevZones];
+            const warehouseZone = { ...newZones[warehouseIndex] };
+
+            if (warehouseZone.status === 'normal') {
+                warehouseZone.status = 'warning';
+                warehouseZone.temp = 45;
+                setFireDetected(false);
+                setCriticalZoneId(null);
+            } else if (warehouseZone.status === 'warning') {
+                warehouseZone.status = 'critical';
+                warehouseZone.temp = 90;
+                setFireDetected(true);
+                setCriticalZoneId('zone-6');
+            } else { // critical
+                warehouseZone.status = 'normal';
+                warehouseZone.temp = 20;
+                setFireDetected(false);
+                setCriticalZoneId(null);
+                 // Reset other zones that might have been affected
+                return mockZones;
+            }
+            
+            newZones[warehouseIndex] = warehouseZone;
+            return newZones;
+        });
+    }, 60000); // 60 seconds
+
     return () => {
       clearInterval(tempInterval);
+      clearInterval(simulationInterval);
     };
   }, []);
 

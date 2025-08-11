@@ -22,6 +22,33 @@ const initialSensors = [
 export function SensorStatus() {
   const [sensors, setSensors] = useState(initialSensors);
 
+  useEffect(() => {
+    const simulationInterval = setInterval(() => {
+      setSensors(prevSensors => {
+        const thermal = prevSensors.find(s => s.name === 'Thermal');
+        if (!thermal) return prevSensors;
+
+        const newSensors = [...prevSensors];
+        const thermalIndex = newSensors.findIndex(s => s.name === 'Thermal');
+        const smokeIndex = newSensors.findIndex(s => s.name === 'Smoke');
+
+        if (thermal.status === 'Active') {
+          newSensors[thermalIndex] = { ...newSensors[thermalIndex], status: 'Warning' };
+          newSensors[smokeIndex] = { ...newSensors[smokeIndex], status: 'Warning' };
+        } else if (thermal.status === 'Warning') {
+          newSensors[thermalIndex] = { ...newSensors[thermalIndex], status: 'Triggered' };
+          newSensors[smokeIndex] = { ...newSensors[smokeIndex], status: 'Triggered' };
+        } else { // Triggered
+          return initialSensors; // Reset
+        }
+        
+        return newSensors;
+      });
+    }, 60000); // 60 seconds
+
+    return () => clearInterval(simulationInterval);
+  }, []);
+
   return (
     <Card>
       <CardHeader>
@@ -38,7 +65,7 @@ export function SensorStatus() {
               <sensor.icon className={cn("w-5 h-5 text-muted-foreground", sensor.status === 'Triggered' && "text-primary")} />
               <span className="font-medium">{sensor.name}</span>
             </div>
-            <Badge variant={sensor.status === 'Triggered' ? 'destructive' : 'secondary'}>
+            <Badge variant={sensor.status === 'Triggered' ? 'destructive' : sensor.status === 'Warning' ? 'destructive' : 'secondary'}>
               {sensor.status}
             </Badge>
           </Link>

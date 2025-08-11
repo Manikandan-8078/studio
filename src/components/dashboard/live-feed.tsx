@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { AlertCircle, ShieldCheck, Wifi } from 'lucide-react';
+import { mockZones } from '@/lib/mock-data';
 
 interface Event {
   time: string;
@@ -25,8 +26,10 @@ export function LiveFeed() {
 
   useEffect(() => {
     // Set initial event on client-side to avoid hydration mismatch
-    setEvents([{ time: new Date().toLocaleTimeString(), message: 'System nominal. All sensors green.', type: 'info' }]);
-
+    if (events.length === 0) {
+      setEvents([{ time: new Date().toLocaleTimeString(), message: 'System nominal. All sensors green.', type: 'info' }]);
+    }
+    
     const addEvent = (event: Event) => {
         setEvents(prev => [event, ...prev].slice(0, 50));
     };
@@ -41,25 +44,26 @@ export function LiveFeed() {
     }, 8000);
 
     const syncInterval = setInterval(() => {
-        const criticalZone = document.querySelector('.bg-primary\\/80');
-        const warningZone = document.querySelector('.bg-accent\\/80');
+        const criticalZoneEl = document.querySelector('.bg-destructive\\/80');
+        const warningZoneEl = document.querySelector('.bg-accent\\/80');
+        const zoneName = criticalZoneEl?.querySelector('p')?.textContent || warningZoneEl?.querySelector('p')?.textContent;
 
         const criticalEventExists = events.some(e => e.message.includes('Critical'));
         const warningEventExists = events.some(e => e.message.includes('Warning'));
 
-        if (criticalZone && !criticalEventExists) {
+        if (criticalZoneEl && !criticalEventExists) {
              addEvent({
                 time: new Date().toLocaleTimeString(),
-                message: 'Critical event detected in Warehouse! Suppression system activated.',
+                message: `Critical event detected in ${zoneName}! Suppression system activated.`,
                 type: 'alert'
             });
-        } else if (warningZone && !warningEventExists && !criticalEventExists) {
+        } else if (warningZoneEl && !warningEventExists && !criticalEventExists) {
              addEvent({
                 time: new Date().toLocaleTimeString(),
-                message: 'Warning: Elevated temperature detected in Warehouse.',
+                message: `Warning: Elevated temperature detected in ${zoneName}.`,
                 type: 'alert'
             });
-        } else if (!criticalZone && !warningZone && (criticalEventExists || warningEventExists)) {
+        } else if (!criticalZoneEl && !warningZoneEl && (criticalEventExists || warningEventExists)) {
              addEvent({
                 time: new Date().toLocaleTimeString(),
                 message: 'All systems returned to normal status.',
@@ -67,18 +71,19 @@ export function LiveFeed() {
             });
         }
 
-    }, 2000);
+    }, 1000);
 
     return () => {
         clearInterval(simulationInterval);
         clearInterval(syncInterval);
     }
-  }, []); // Note: events dependency is removed to avoid re-triggering useEffect on every new event.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getIcon = (type: Event['type']) => {
     switch (type) {
         case 'alert':
-            return <AlertCircle className="w-5 h-5 text-primary mt-1 flex-shrink-0" />;
+            return <AlertCircle className="w-5 h-5 text-destructive mt-1 flex-shrink-0" />;
         case 'info':
             return <ShieldCheck className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />;
         default:

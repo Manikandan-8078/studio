@@ -23,30 +23,30 @@ export function SensorStatus() {
   const [sensors, setSensors] = useState(initialSensors);
 
   useEffect(() => {
-    const simulationInterval = setInterval(() => {
-      setSensors(prevSensors => {
-        const thermal = prevSensors.find(s => s.name === 'Thermal');
-        if (!thermal) return prevSensors;
-
-        const newSensors = [...prevSensors];
-        const thermalIndex = newSensors.findIndex(s => s.name === 'Thermal');
-        const smokeIndex = newSensors.findIndex(s => s.name === 'Smoke');
-
-        if (thermal.status === 'Active') {
-          newSensors[thermalIndex] = { ...newSensors[thermalIndex], status: 'Warning' };
-          newSensors[smokeIndex] = { ...newSensors[smokeIndex], status: 'Warning' };
-        } else if (thermal.status === 'Warning') {
-          newSensors[thermalIndex] = { ...newSensors[thermalIndex], status: 'Triggered' };
-          newSensors[smokeIndex] = { ...newSensors[smokeIndex], status: 'Triggered' };
-        } else { // Triggered
-          return initialSensors; // Reset
-        }
+    const syncInterval = setInterval(() => {
+        const criticalZone = document.querySelector('.bg-destructive\\/80');
+        const warningZone = document.querySelector('.bg-accent\\/80');
         
-        return newSensors;
-      });
-    }, 60000); // 60 seconds
+        setSensors(prevSensors => {
+            const newSensors = [...prevSensors];
+            const thermalIndex = newSensors.findIndex(s => s.name === 'Thermal');
+            const smokeIndex = newSensors.findIndex(s => s.name === 'Smoke');
 
-    return () => clearInterval(simulationInterval);
+            if (criticalZone) {
+                newSensors[thermalIndex].status = 'Triggered';
+                newSensors[smokeIndex].status = 'Triggered';
+            } else if (warningZone) {
+                newSensors[thermalIndex].status = 'Warning';
+                newSensors[smokeIndex].status = 'Warning';
+            } else {
+                newSensors[thermalIndex].status = 'Active';
+                newSensors[smokeIndex].status = 'Active';
+            }
+            return newSensors;
+        });
+    }, 1000);
+
+    return () => clearInterval(syncInterval);
   }, []);
 
   return (
@@ -62,7 +62,7 @@ export function SensorStatus() {
             className="flex items-center justify-between p-2 rounded-md hover:bg-secondary transition-colors"
           >
             <div className="flex items-center gap-3">
-              <sensor.icon className={cn("w-5 h-5 text-muted-foreground", sensor.status === 'Triggered' && "text-primary")} />
+              <sensor.icon className={cn("w-5 h-5 text-muted-foreground", sensor.status === 'Triggered' && "text-destructive")} />
               <span className="font-medium">{sensor.name}</span>
             </div>
             <Badge variant={sensor.status === 'Triggered' ? 'destructive' : sensor.status === 'Warning' ? 'destructive' : 'secondary'}>

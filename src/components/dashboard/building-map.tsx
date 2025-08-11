@@ -27,35 +27,49 @@ export function BuildingMap() {
 
     const simulationInterval = setInterval(() => {
         setMapZones(prevZones => {
-            const warehouseIndex = prevZones.findIndex(z => z.id === 'zone-6');
-            if (warehouseIndex === -1) return prevZones;
-
-            const newZones = [...prevZones];
-            const warehouseZone = { ...newZones[warehouseIndex] };
-
-            if (warehouseZone.status === 'normal') {
-                warehouseZone.status = 'warning';
-                warehouseZone.temp = 45;
+            const currentCriticalZone = prevZones.find(z => z.status === 'critical');
+            if (currentCriticalZone) {
+                // If a zone is critical, reset everything to normal
                 setFireDetected(false);
                 setCriticalZoneId(null);
-            } else if (warehouseZone.status === 'warning') {
-                warehouseZone.status = 'critical';
-                warehouseZone.temp = 90;
-                setFireDetected(true);
-                setCriticalZoneId('zone-6');
-            } else { // critical
-                warehouseZone.status = 'normal';
-                warehouseZone.temp = 20;
-                setFireDetected(false);
-                setCriticalZoneId(null);
-                 // Reset other zones that might have been affected
-                return mockZones;
+                return mockZones.map(z => ({...z, status: 'normal', temp: z.temp}));
             }
             
-            newZones[warehouseIndex] = warehouseZone;
-            return newZones;
+            const currentWarningZone = prevZones.find(z => z.status === 'warning');
+            if(currentWarningZone) {
+                // If a zone is in warning, make it critical
+                const newZones = [...prevZones];
+                const warningIndex = newZones.findIndex(z => z.id === currentWarningZone.id);
+                newZones[warningIndex] = {
+                    ...newZones[warningIndex],
+                    status: 'critical',
+                    temp: 90,
+                };
+                setFireDetected(true);
+                setCriticalZoneId(currentWarningZone.id);
+                return newZones;
+            }
+
+            // If no zone is in warning or critical, pick a random one to put into warning
+            const nonNormalZones = prevZones.filter(z => z.status !== 'normal');
+            if (nonNormalZones.length === 0) {
+                 const newZones = [...prevZones];
+                 const randomIndex = Math.floor(Math.random() * newZones.length);
+                 newZones[randomIndex] = {
+                    ...newZones[randomIndex],
+                    status: 'warning',
+                    temp: 45
+                 }
+                 setFireDetected(false);
+                 setCriticalZoneId(null);
+                 return newZones;
+            }
+
+            return prevZones;
+
         });
-    }, 60000); // 60 seconds
+    }, 5000); // 5 seconds for faster demo
+
 
     return () => {
       clearInterval(tempInterval);
@@ -66,7 +80,7 @@ export function BuildingMap() {
   const getZoneClass = (status: ZoneStatus) => {
     switch (status) {
       case 'critical':
-        return 'bg-primary/80 border-primary animate-pulse';
+        return 'bg-destructive/80 border-destructive animate-pulse';
       case 'warning':
         return 'bg-accent/80 border-accent';
       default:

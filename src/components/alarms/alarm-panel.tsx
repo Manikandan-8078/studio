@@ -20,107 +20,47 @@ import {
 import { Separator } from '../ui/separator';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
+import { mockZones as initialAlarmZones } from '@/lib/mock-data';
+
 
 type AlarmStatus = 'All Clear' | 'Fire Alarm Active' | 'Manual Alarm Active' | 'Silenced';
-
-const initialAlarmZones = [
-    { id: 'zone-1', name: 'Lobby', status: 'Clear' },
-    { id: 'zone-2', name: 'Office A', status: 'Clear' },
-    { id: 'zone-3', name: 'Office B', status: 'Clear' },
-    { id: 'zone-4', name: 'Server Room', status: 'Clear' },
-    { id: 'zone-5', name: 'Kitchen', status: 'Clear' },
-    { id: 'zone-6', name: 'Warehouse', status: 'Clear' },
-];
 
 export function AlarmPanel() {
     const { toast } = useToast();
     const [status, setStatus] = useState<AlarmStatus>('All Clear');
-    const [zones, setZones] = useState(initialAlarmZones);
+    const [zones, setZones] = useState(initialAlarmZones.map(z => ({...z, status: 'Clear'})));
     const [connectivity, setConnectivity] = useState('Online');
 
     useEffect(() => {
-        const simulationInterval = setInterval(() => {
-            setZones(prevZones => {
-                const warehouseIndex = prevZones.findIndex(z => z.id === 'zone-6');
-                if (warehouseIndex === -1) return prevZones;
-
-                const newZones = [...prevZones];
-                const warehouseZone = { ...newZones[warehouseIndex] };
-
-                if (warehouseZone.status === 'Clear') {
-                    // This is handled by the BuildingMap now, but we can set alarm status here
-                    setStatus('All Clear');
-                    warehouseZone.status = 'Clear'; // This will be quickly overridden but let's be consistent
-                } else if (warehouseZone.status === 'Triggered' && status !== 'Fire Alarm Active') {
-                    // Warehouse moved to critical
-                    setStatus('Fire Alarm Active');
-                } else {
-                     // Resetting
-                     setStatus('All Clear');
-                     return initialAlarmZones;
-                }
-                
-                newZones[warehouseIndex] = warehouseZone;
-                return newZones;
-            });
-
-            // A separate state update for the zone that is visually triggered
-            const warehouseZone = zones.find(z => z.id === 'zone-6');
-            if (warehouseZone) { // a bit of a race condition to check this.
-                if (warehouseZone.status === 'Triggered' && status !== 'Fire Alarm Active') {
-                     setStatus('Fire Alarm Active');
-                }
-            }
-
-
-        }, 60000);
-
-        const aInterval = setInterval(() => {
-          setZones(prevZones => {
-              const warehouseZone = prevZones.find(z => z.id === 'zone-6');
-              if (!warehouseZone) {
-                  return prevZones;
-              }
-              const currentStatus = warehouseZone.status;
-              const newZones = [...prevZones];
-              const warehouseIndex = newZones.findIndex(z => z.id === 'zone-6');
-
-              if (status === 'Fire Alarm Active' && currentStatus !== 'Triggered') {
-                  newZones[warehouseIndex].status = 'Triggered';
-                  return newZones;
-              }
-              return prevZones;
-
-          });
-      }, 1000)
-
         // Sync with the building map simulation
         const syncInterval = setInterval(() => {
-            const buildingMapWarehouse = document.querySelector('[data-ai-hint="building interior"]');
-            if (!buildingMapWarehouse) return;
+            const criticalZoneEl = document.querySelector('.bg-destructive\\/80');
+            const criticalZoneName = criticalZoneEl?.querySelector('p')?.textContent;
+            
+            if (criticalZoneName) {
+                setStatus('Fire Alarm Active');
+                setZones(prevZones => {
+                    const newZones = [...prevZones];
+                    const zoneIndex = newZones.findIndex(z => z.name === criticalZoneName);
+                    if (zoneIndex !== -1) {
+                        newZones.forEach((z, i) => newZones[i].status = 'Clear');
+                        newZones[zoneIndex].status = 'Triggered';
+                    }
+                    return newZones;
+                });
+            } else if (status === 'Fire Alarm Active' ) {
+                // If the alarm is active but no zone is critical, it means it's resetting
+                setStatus('All Clear');
+                setZones(initialAlarmZones.map(z => ({...z, status: 'Clear'})));
+            }
 
-            setZones(prevZones => {
-                const newZones = [...prevZones];
-                const warehouseIndex = newZones.findIndex(z => z.id === 'zone-6');
-                if (warehouseIndex === -1) return prevZones;
-                
-                if (status === 'Fire Alarm Active' && newZones[warehouseIndex].status !== 'Triggered') {
-                    newZones[warehouseIndex].status = 'Triggered';
-                } else if (status === 'All Clear' && newZones[warehouseIndex].status === 'Triggered') {
-                    newZones[warehouseIndex].status = 'Clear';
-                }
-                return newZones;
-            });
-
-        }, 1000);
+        }, 500);
 
 
         return () => {
-             clearInterval(simulationInterval);
              clearInterval(syncInterval);
-             clearInterval(aInterval);
         };
-    }, [status, zones]);
+    }, [status]);
 
     const handleManualTrigger = () => {
         setStatus('Manual Alarm Active');
@@ -142,7 +82,8 @@ export function AlarmPanel() {
     
     const handleReset = () => {
         setStatus('All Clear');
-        setZones(initialAlarmZones); // Manually reset zones
+        setZones(initialAlarmZones.map(z => ({...z, status: 'Clear'}))); // Manually reset zones
+        // This will be picked up by the building map which should reset itself
         toast({
             title: "Alarms Reset",
             description: "The alarm system has been reset to 'All Clear'.",

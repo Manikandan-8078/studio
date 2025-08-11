@@ -163,7 +163,7 @@ export function SuppressionControls() {
             </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Button variant="outline" size="lg" className="h-20 flex-col gap-2" onClick={() => handleOverride('Water Sprinklers', '150 PSI', 500, 0)} disabled={!isSystemActive || !isPowerOn}>
               <Waves className="w-6 h-6" />
               <span>Water Sprinklers</span>
@@ -171,10 +171,6 @@ export function SuppressionControls() {
             <Button variant="outline" size="lg" className="h-20 flex-col gap-2" onClick={() => handleOverride('Foam Concentrate', '200 PSI', 0, 200)} disabled={!isSystemActive || !isPowerOn}>
               <SprayCan className="w-6 h-6" />
               <span>Foam Concentrate</span>
-            </Button>
-             <Button variant="outline" size="lg" className="h-20 flex-col gap-2" onClick={() => handleOverride('Pressure Cannon', '450 PSI', 800, 0)} disabled={!isSystemActive || !isPowerOn}>
-              <Crosshair className="w-6 h-6" />
-              <span>Pressure Cannon</span>
             </Button>
             <Button size="lg" className="h-20 flex-col gap-2 bg-accent hover:bg-accent/90 text-accent-foreground" onClick={() => handleOverride('Targeted MAP Gun', '300 PSI', 100, 100)} disabled={!isSystemActive || !isPowerOn}>
               <Target className="w-6 h-6" />

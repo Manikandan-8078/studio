@@ -14,27 +14,6 @@ export function BuildingMap() {
   const [criticalZoneId, setCriticalZoneId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Simulate a fire event and temperature changes
-    const timer1 = setTimeout(() => {
-      setMapZones((prevZones) =>
-        prevZones.map((z) => (z.id === 'zone-4' ? { ...z, status: 'warning', temp: 45, sensors: z.sensors.map(s => s.name === 'Thermal' ? {...s, status: 'Triggered'} : s) } : z))
-      );
-    }, 2000);
-
-    const timer2 = setTimeout(() => {
-      setMapZones((prevZones) =>
-        prevZones.map((z) => (z.id === 'zone-4' ? { ...z, status: 'critical', temp: 75, sensors: z.sensors.map(s => s.name === 'Smoke' ? {...s, status: 'Triggered'} : s) } : z))
-      );
-      setFireDetected(true);
-      setCriticalZoneId('zone-4');
-    }, 4000);
-    
-    const timer3 = setTimeout(() => {
-      setMapZones((prevZones) =>
-        prevZones.map((z) => (z.id === 'zone-3' ? { ...z, status: 'warning', temp: 35 } : z))
-      );
-    }, 5500);
-
     const tempInterval = setInterval(() => {
       setMapZones(prevZones => prevZones.map(zone => {
         if (zone.status === 'normal') {
@@ -46,9 +25,6 @@ export function BuildingMap() {
     }, 3000);
 
     return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
       clearInterval(tempInterval);
     };
   }, []);

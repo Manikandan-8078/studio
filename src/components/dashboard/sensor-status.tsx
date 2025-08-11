@@ -22,25 +22,6 @@ const initialSensors = [
 export function SensorStatus() {
   const [sensors, setSensors] = useState(initialSensors);
 
-  useEffect(() => {
-    const timer1 = setTimeout(() => {
-        setSensors((prevSensors) =>
-            prevSensors.map((s) => (s.name === 'Thermal' ? { ...s, status: 'Triggered' } : s))
-        );
-    }, 2000);
-
-    const timer2 = setTimeout(() => {
-        setSensors((prevSensors) =>
-            prevSensors.map((s) => (s.name === 'Smoke' ? { ...s, status: 'Triggered' } : s))
-        );
-    }, 4000);
-
-    return () => {
-        clearTimeout(timer1);
-        clearTimeout(timer2);
-    };
-  }, []);
-
   return (
     <Card>
       <CardHeader>

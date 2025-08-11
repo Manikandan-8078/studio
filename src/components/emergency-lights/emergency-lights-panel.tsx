@@ -19,12 +19,6 @@ export function EmergencyLightsPanel() {
     const [connectivity, setConnectivity] = useState('Online');
 
     useEffect(() => {
-        // Simulate fire event activation
-        const timer = setTimeout(() => {
-            if (status === 'Charged') setStatus('Active');
-        }, 4000);
-
-        // Simulate charge depletion while active
         let chargeInterval: NodeJS.Timeout | undefined;
         if (status === 'Active') {
             chargeInterval = setInterval(() => {
@@ -40,7 +34,6 @@ export function EmergencyLightsPanel() {
 
 
         return () => {
-            clearTimeout(timer);
             if (chargeInterval) {
                 clearInterval(chargeInterval);
             }

@@ -9,34 +9,9 @@ import { AlertCircle, ShieldCheck } from 'lucide-react';
 const initialEvents = [
   { time: '14:30:15', message: 'System nominal. All sensors green.', type: 'info' },
 ];
-const newEvents = [
-  { time: '14:32:05', message: 'Warning: Temperature rise in Server Room.', type: 'alert' },
-  { time: '14:32:10', message: 'Critical: Smoke detected in Server Room.', type: 'alert' },
-  { time: '14:32:11', message: 'FIRE CONFIRMED: Server Room.', type: 'alert' },
-  { time: '14:32:11', message: 'Auto Power-Cut Protocol: Non-essential power disconnected.', type: 'info'},
-  { time: '14:32:11', message: 'Emergency lights activated building-wide.', type: 'info' },
-  { time: '14:32:12', message: 'Emergency services notified.', type: 'info' },
-  { time: '14:32:13', message: 'Suppression system activated in Server Room.', type: 'info' },
-  { time: '14:32:45', message: 'Warning: Temperature rise in Office B.', type: 'alert' },
-];
 
 export function LiveFeed() {
   const [events, setEvents] = useState(initialEvents);
-
-  useEffect(() => {
-    let eventIndex = 0;
-    const interval = setInterval(() => {
-      if (eventIndex < newEvents.length) {
-        const now = new Date();
-        const timeString = now.toLocaleTimeString('en-US', { hour12: false });
-        setEvents((prev) => [{...newEvents[eventIndex], time: timeString}, ...prev]);
-        eventIndex++;
-      } else {
-        clearInterval(interval);
-      }
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <Card>

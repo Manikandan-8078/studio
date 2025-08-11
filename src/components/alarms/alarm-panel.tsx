@@ -27,7 +27,7 @@ const alarmZones = [
     { id: 'zone-1', name: 'Lobby', status: 'Clear' },
     { id: 'zone-2', name: 'Office A', status: 'Clear' },
     { id: 'zone-3', name: 'Office B', status: 'Clear' },
-    { id: 'zone-4', name: 'Server Room', status: 'Triggered' },
+    { id: 'zone-4', name: 'Server Room', status: 'Clear' },
     { id: 'zone-5', name: 'Kitchen', status: 'Clear' },
     { id: 'zone-6', name: 'Warehouse', status: 'Clear' },
 ];
@@ -37,19 +37,6 @@ export function AlarmPanel() {
     const [status, setStatus] = useState<AlarmStatus>('All Clear');
     const [zones, setZones] = useState(alarmZones);
     const [connectivity, setConnectivity] = useState('Online');
-
-
-     useEffect(() => {
-        // Simulate fire event activation
-        const timer = setTimeout(() => {
-            if (status === 'All Clear') setStatus('Fire Alarm Active');
-        }, 4000);
-
-        return () => {
-            clearTimeout(timer);
-        };
-    }, [status]);
-
 
     const handleManualTrigger = () => {
         setStatus('Manual Alarm Active');

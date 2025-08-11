@@ -172,9 +172,9 @@ export function SuppressionControls() {
               <SprayCan className="w-6 h-6" />
               <span>Foam Concentrate</span>
             </Button>
-            <Button size="lg" className="h-20 flex-col gap-2 bg-accent hover:bg-accent/90 text-accent-foreground" onClick={() => handleOverride('Targeted MAP Gun', '300 PSI', 100, 100)} disabled={!isSystemActive || !isPowerOn}>
+            <Button size="lg" className="h-20 flex-col gap-2 bg-accent hover:bg-accent/90 text-accent-foreground" onClick={() => handleOverride('Inferno Gun', '300 PSI', 100, 100)} disabled={!isSystemActive || !isPowerOn}>
               <Target className="w-6 h-6" />
-              <span>Targeted MAP Gun</span>
+              <span>Inferno Gun</span>
             </Button>
           </div>
            <Separator />

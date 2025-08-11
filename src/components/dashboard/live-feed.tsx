@@ -12,10 +12,6 @@ interface Event {
   type: 'info' | 'alert' | 'system';
 }
 
-const initialEvents: Event[] = [
-  { time: new Date().toLocaleTimeString(), message: 'System nominal. All sensors green.', type: 'info' },
-];
-
 const systemMessages = [
     'Running routine diagnostic on Zone 2 sensors.',
     'Network connectivity stable.',
@@ -25,9 +21,12 @@ const systemMessages = [
 ];
 
 export function LiveFeed() {
-  const [events, setEvents] = useState<Event[]>(initialEvents);
+  const [events, setEvents] = useState<Event[]>([]);
 
   useEffect(() => {
+    // Set initial event on client-side to avoid hydration mismatch
+    setEvents([{ time: new Date().toLocaleTimeString(), message: 'System nominal. All sensors green.', type: 'info' }]);
+
     const addEvent = (event: Event) => {
         setEvents(prev => [event, ...prev].slice(0, 50));
     };
@@ -74,7 +73,7 @@ export function LiveFeed() {
         clearInterval(simulationInterval);
         clearInterval(syncInterval);
     }
-  }, [events]);
+  }, []); // Note: events dependency is removed to avoid re-triggering useEffect on every new event.
 
   const getIcon = (type: Event['type']) => {
     switch (type) {
@@ -95,6 +94,9 @@ export function LiveFeed() {
       <CardContent>
         <ScrollArea className="h-72 w-full">
           <div className="space-y-4 pr-4">
+            {events.length === 0 && (
+                <div className="text-sm text-muted-foreground text-center pt-8">Initializing live feed...</div>
+            )}
             {events.map((event, index) => (
               <div key={index}>
                 <div className="flex items-start gap-3">

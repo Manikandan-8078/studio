@@ -13,6 +13,9 @@ import { Separator } from '../ui/separator';
 
 type PendingAction = 'toggleSystem' | 'togglePower' | null;
 
+const MAX_WATER_LITERS = 5000;
+const MAX_FOAM_LITERS = 1000;
+
 export function SuppressionControls() {
   const { toast } = useToast();
   const [isSystemActive, setIsSystemActive] = useState(true);
@@ -160,11 +163,17 @@ export function SuppressionControls() {
                 <h4 className="text-md font-semibold mb-3">Resource Levels</h4>
                 <div className="space-y-4">
                     <div className="grid gap-2">
-                        <Label className="text-sm flex items-center gap-2 text-muted-foreground"><Droplets className="w-4 h-4"/> Water Reserve</Label>
+                        <div className="flex justify-between items-center text-sm">
+                            <Label className="flex items-center gap-2 text-muted-foreground"><Droplets className="w-4 h-4"/> Water Reserve</Label>
+                            <span className="font-semibold">{(MAX_WATER_LITERS * (waterReserve / 100)).toLocaleString()} / {MAX_WATER_LITERS.toLocaleString()} L</span>
+                        </div>
                         <Progress value={waterReserve} />
                     </div>
                      <div className="grid gap-2">
-                        <Label className="text-sm flex items-center gap-2 text-muted-foreground"><SprayCan className="w-4 h-4"/> Foam Concentrate</Label>
+                         <div className="flex justify-between items-center text-sm">
+                            <Label className="flex items-center gap-2 text-muted-foreground"><SprayCan className="w-4 h-4"/> Foam Concentrate</Label>
+                            <span className="font-semibold">{(MAX_FOAM_LITERS * (foamReserve / 100)).toLocaleString()} / {MAX_FOAM_LITERS.toLocaleString()} L</span>
+                        </div>
                         <Progress value={foamReserve} />
                     </div>
                 </div>

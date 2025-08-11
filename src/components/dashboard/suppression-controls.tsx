@@ -1,13 +1,15 @@
 'use client';
 import { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Power, Target, Waves, ShieldCheck, ShieldOff, KeyRound, MessageSquareCode, Eye, EyeOff, PowerOff } from 'lucide-react';
+import { Power, Target, Waves, ShieldCheck, ShieldOff, KeyRound, MessageSquareCode, Eye, EyeOff, PowerOff, Crosshair, Droplets, SprayCan } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Progress } from '@/components/ui/progress';
+import { Separator } from '../ui/separator';
 
 type PendingAction = 'toggleSystem' | 'togglePower' | null;
 
@@ -24,6 +26,8 @@ export function SuppressionControls() {
   const [pendingState, setPendingState] = useState(false);
   const [pendingAction, setPendingAction] = useState<PendingAction>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [waterReserve, setWaterReserve] = useState(100);
+  const [foamReserve, setFoamReserve] = useState(100);
 
   const handleOverride = (gun: string) => {
     if (!isSystemActive) {
@@ -34,6 +38,26 @@ export function SuppressionControls() {
       });
       return;
     }
+    
+    if (gun.toLowerCase().includes('water') || gun.toLowerCase().includes('sprinkler') || gun.toLowerCase().includes('cannon')) {
+        if(waterReserve > 0) {
+            setWaterReserve(prev => Math.max(0, prev - 10));
+        } else {
+            toast({ title: 'Water Depleted', description: 'Water reserve is empty.', variant: 'destructive' });
+            return;
+        }
+    }
+    
+    if (gun.toLowerCase().includes('foam')) {
+        if(foamReserve > 0) {
+            setFoamReserve(prev => Math.max(0, prev - 20));
+        } else {
+            toast({ title: 'Foam Depleted', description: 'Foam reserve is empty.', variant: 'destructive' });
+            return;
+        }
+    }
+
+
     toast({
       title: 'Suppression System Override',
       description: `Manually activating ${gun}.`,
@@ -112,34 +136,51 @@ export function SuppressionControls() {
                 />
             </div>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             <Button variant="outline" size="lg" className="h-20 flex-col gap-2" onClick={() => handleOverride('Water Sprinklers')} disabled={!isSystemActive || !isPowerOn}>
               <Waves className="w-6 h-6" />
               <span>Water Sprinklers</span>
             </Button>
             <Button variant="outline" size="lg" className="h-20 flex-col gap-2" onClick={() => handleOverride('Foam Concentrate')} disabled={!isSystemActive || !isPowerOn}>
-              <Power className="w-6 h-6" />
+              <SprayCan className="w-6 h-6" />
               <span>Foam Concentrate</span>
+            </Button>
+             <Button variant="outline" size="lg" className="h-20 flex-col gap-2" onClick={() => handleOverride('Pressure Cannon')} disabled={!isSystemActive || !isPowerOn}>
+              <Crosshair className="w-6 h-6" />
+              <span>Pressure Cannon</span>
             </Button>
             <Button size="lg" className="h-20 flex-col gap-2 bg-accent hover:bg-accent/90 text-accent-foreground" onClick={() => handleOverride('Targeted MAP Gun')} disabled={!isSystemActive || !isPowerOn}>
               <Target className="w-6 h-6" />
               <span>Targeted MAP Gun</span>
             </Button>
           </div>
-          <div className="md:col-span-2">
-             {isPowerOn ? (
-                <Button variant="destructive" size="lg" className="w-full h-20" onClick={() => handleTogglePower(false)}>
-                    <PowerOff className="w-6 h-6" />
-                    <span>Total Power Off (Non-Essentials)</span>
-                </Button>
-            ) : (
-                <Button variant="secondary" size="lg" className="w-full h-20" onClick={() => handleTogglePower(true)}>
-                    <Power className="w-6 h-6" />
-                    <span>Restore Power</span>
-                </Button>
-            )}
-          </div>
+           <Separator />
+            <div>
+                <h4 className="text-md font-semibold mb-3">Resource Levels</h4>
+                <div className="space-y-4">
+                    <div className="grid gap-2">
+                        <Label className="text-sm flex items-center gap-2 text-muted-foreground"><Droplets className="w-4 h-4"/> Water Reserve</Label>
+                        <Progress value={waterReserve} />
+                    </div>
+                     <div className="grid gap-2">
+                        <Label className="text-sm flex items-center gap-2 text-muted-foreground"><SprayCan className="w-4 h-4"/> Foam Concentrate</Label>
+                        <Progress value={foamReserve} />
+                    </div>
+                </div>
+            </div>
+          <Separator />
+           {isPowerOn ? (
+              <Button variant="destructive" size="lg" className="w-full h-16" onClick={() => handleTogglePower(false)}>
+                  <PowerOff className="w-6 h-6 mr-2" />
+                  <span>Total Power Off (Non-Essentials)</span>
+              </Button>
+          ) : (
+              <Button variant="secondary" size="lg" className="w-full h-16" onClick={() => handleTogglePower(true)}>
+                  <Power className="w-6 h-6 mr-2" />
+                  <span>Restore Power</span>
+              </Button>
+          )}
         </CardContent>
       </Card>
 

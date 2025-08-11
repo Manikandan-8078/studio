@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Power, Target, Waves, ShieldCheck, ShieldOff, KeyRound, MessageSquareCode, Eye, EyeOff, PowerOff, Crosshair, Droplets, SprayCan } from 'lucide-react';
+import { Power, Target, Waves, ShieldCheck, ShieldOff, KeyRound, MessageSquareCode, Eye, EyeOff, PowerOff, Crosshair, Droplets, SprayCan, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
@@ -10,11 +10,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '../ui/separator';
+import { ScrollArea } from '../ui/scroll-area';
 
 type PendingAction = 'toggleSystem' | 'togglePower' | null;
 
 const MAX_WATER_LITERS = 5000;
 const MAX_FOAM_LITERS = 1000;
+
+interface SystemLogEntry {
+    time: string;
+    message: string;
+}
 
 export function SuppressionControls() {
   const { toast } = useToast();
@@ -31,8 +37,15 @@ export function SuppressionControls() {
   const [showPassword, setShowPassword] = useState(false);
   const [waterReserve, setWaterReserve] = useState(100);
   const [foamReserve, setFoamReserve] = useState(100);
+  const [systemLog, setSystemLog] = useState<SystemLogEntry[]>([]);
 
-  const handleOverride = (gun: string) => {
+
+  const addLogEntry = (message: string) => {
+    const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+    setSystemLog(prev => [{ time, message }, ...prev]);
+  };
+
+  const handleOverride = (gun: string, pressure: string, waterUsage: number, foamUsage: number) => {
     if (!isSystemActive) {
       toast({
         title: 'System Disabled',
@@ -42,24 +55,30 @@ export function SuppressionControls() {
       return;
     }
     
-    if (gun.toLowerCase().includes('water') || gun.toLowerCase().includes('sprinkler') || gun.toLowerCase().includes('cannon')) {
+    let resourceUsedMessage = '';
+    
+    if (waterUsage > 0) {
         if(waterReserve > 0) {
-            setWaterReserve(prev => Math.max(0, prev - 10));
+            setWaterReserve(prev => Math.max(0, prev - (waterUsage / MAX_WATER_LITERS * 100)));
+            resourceUsedMessage = `${waterUsage}L Water Used.`;
         } else {
             toast({ title: 'Water Depleted', description: 'Water reserve is empty.', variant: 'destructive' });
             return;
         }
     }
     
-    if (gun.toLowerCase().includes('foam')) {
+    if (foamUsage > 0) {
         if(foamReserve > 0) {
-            setFoamReserve(prev => Math.max(0, prev - 20));
+            setFoamReserve(prev => Math.max(0, prev - (foamUsage / MAX_FOAM_LITERS * 100)));
+            resourceUsedMessage = `${foamUsage}L Foam Used.`;
         } else {
             toast({ title: 'Foam Depleted', description: 'Foam reserve is empty.', variant: 'destructive' });
             return;
         }
     }
 
+    const logMessage = `${gun} activated at ${pressure}. ${resourceUsedMessage}`;
+    addLogEntry(logMessage);
 
     toast({
       title: 'Suppression System Override',
@@ -101,13 +120,17 @@ export function SuppressionControls() {
 
       if (pendingAction === 'toggleSystem') {
         setIsSystemActive(pendingState);
+        const actionText = `System has been ${pendingState ? 'activated' : 'deactivated'}`;
+        addLogEntry(actionText);
         toast({
-          title: `System has been ${pendingState ? 'activated' : 'deactivated'}`,
+          title: actionText,
           description: `The suppression system is now ${pendingState ? 'online' : 'offline'}.`,
           variant: pendingState ? 'default' : 'destructive',
         });
       } else if (pendingAction === 'togglePower') {
         setIsPowerOn(pendingState);
+        const actionText = `Non-essential power ${pendingState ? 'restored' : 'cut'}`;
+        addLogEntry(actionText);
          toast({
           title: `Power has been turned ${pendingState ? 'ON' : 'OFF'}`,
           description: `Non-essential power is now ${pendingState ? 'active' : 'inactive'}.`,
@@ -141,41 +164,60 @@ export function SuppressionControls() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <Button variant="outline" size="lg" className="h-20 flex-col gap-2" onClick={() => handleOverride('Water Sprinklers')} disabled={!isSystemActive || !isPowerOn}>
+            <Button variant="outline" size="lg" className="h-20 flex-col gap-2" onClick={() => handleOverride('Water Sprinklers', '150 PSI', 500, 0)} disabled={!isSystemActive || !isPowerOn}>
               <Waves className="w-6 h-6" />
               <span>Water Sprinklers</span>
             </Button>
-            <Button variant="outline" size="lg" className="h-20 flex-col gap-2" onClick={() => handleOverride('Foam Concentrate')} disabled={!isSystemActive || !isPowerOn}>
+            <Button variant="outline" size="lg" className="h-20 flex-col gap-2" onClick={() => handleOverride('Foam Concentrate', '200 PSI', 0, 200)} disabled={!isSystemActive || !isPowerOn}>
               <SprayCan className="w-6 h-6" />
               <span>Foam Concentrate</span>
             </Button>
-             <Button variant="outline" size="lg" className="h-20 flex-col gap-2" onClick={() => handleOverride('Pressure Cannon')} disabled={!isSystemActive || !isPowerOn}>
+             <Button variant="outline" size="lg" className="h-20 flex-col gap-2" onClick={() => handleOverride('Pressure Cannon', '450 PSI', 800, 0)} disabled={!isSystemActive || !isPowerOn}>
               <Crosshair className="w-6 h-6" />
               <span>Pressure Cannon</span>
             </Button>
-            <Button size="lg" className="h-20 flex-col gap-2 bg-accent hover:bg-accent/90 text-accent-foreground" onClick={() => handleOverride('Targeted MAP Gun')} disabled={!isSystemActive || !isPowerOn}>
+            <Button size="lg" className="h-20 flex-col gap-2 bg-accent hover:bg-accent/90 text-accent-foreground" onClick={() => handleOverride('Targeted MAP Gun', '300 PSI', 100, 100)} disabled={!isSystemActive || !isPowerOn}>
               <Target className="w-6 h-6" />
               <span>Targeted MAP Gun</span>
             </Button>
           </div>
            <Separator />
-            <div>
-                <h4 className="text-md font-semibold mb-3">Resource Levels</h4>
-                <div className="space-y-4">
-                    <div className="grid gap-2">
-                        <div className="flex justify-between items-center text-sm">
-                            <Label className="flex items-center gap-2 text-muted-foreground"><Droplets className="w-4 h-4"/> Water Reserve</Label>
-                            <span className="font-semibold">{(MAX_WATER_LITERS * (waterReserve / 100)).toLocaleString()} / {MAX_WATER_LITERS.toLocaleString()} L</span>
+            <div className="grid md:grid-cols-2 gap-6">
+                 <div>
+                    <h4 className="text-md font-semibold mb-3">Resource Levels</h4>
+                    <div className="space-y-4">
+                        <div className="grid gap-2">
+                            <div className="flex justify-between items-center text-sm">
+                                <Label className="flex items-center gap-2 text-muted-foreground"><Droplets className="w-4 h-4"/> Water Reserve</Label>
+                                <span className="font-semibold">{(MAX_WATER_LITERS * (waterReserve / 100)).toLocaleString()} / {MAX_WATER_LITERS.toLocaleString()} L</span>
+                            </div>
+                            <Progress value={waterReserve} />
                         </div>
-                        <Progress value={waterReserve} />
-                    </div>
-                     <div className="grid gap-2">
-                         <div className="flex justify-between items-center text-sm">
-                            <Label className="flex items-center gap-2 text-muted-foreground"><SprayCan className="w-4 h-4"/> Foam Concentrate</Label>
-                            <span className="font-semibold">{(MAX_FOAM_LITERS * (foamReserve / 100)).toLocaleString()} / {MAX_FOAM_LITERS.toLocaleString()} L</span>
+                         <div className="grid gap-2">
+                             <div className="flex justify-between items-center text-sm">
+                                <Label className="flex items-center gap-2 text-muted-foreground"><SprayCan className="w-4 h-4"/> Foam Concentrate</Label>
+                                <span className="font-semibold">{(MAX_FOAM_LITERS * (foamReserve / 100)).toLocaleString()} / {MAX_FOAM_LITERS.toLocaleString()} L</span>
+                            </div>
+                            <Progress value={foamReserve} />
                         </div>
-                        <Progress value={foamReserve} />
                     </div>
+                </div>
+                 <div>
+                    <h4 className="text-md font-semibold mb-3 flex items-center gap-2"><FileText className="w-4 h-4"/> System Log</h4>
+                     <ScrollArea className="h-24 w-full rounded-md border p-2 bg-secondary/50">
+                        <div className="space-y-2 pr-2">
+                            {systemLog.length > 0 ? (
+                                systemLog.map((entry, index) => (
+                                    <div key={index} className="text-xs text-muted-foreground">
+                                        <span className="font-mono mr-2">{entry.time}</span>
+                                        <span>{entry.message}</span>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="text-xs text-muted-foreground text-center pt-8">No actions taken yet.</div>
+                            )}
+                        </div>
+                    </ScrollArea>
                 </div>
             </div>
           <Separator />

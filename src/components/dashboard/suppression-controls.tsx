@@ -84,6 +84,16 @@ export function SuppressionControls() {
       title: 'Suppression System Override',
       description: `Manually activating ${gun}.`,
     });
+    
+    if (isPowerOn) {
+        setIsPowerOn(false);
+        addLogEntry('Auto Power-Cut Protocol initiated due to suppression activation.');
+        toast({
+            title: "Auto Power-Cut Activated",
+            description: "Non-essential power has been automatically cut.",
+            variant: "destructive"
+        });
+    }
   };
 
   const handleToggleSystem = (checked: boolean) => {

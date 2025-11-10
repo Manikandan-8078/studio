@@ -1,27 +1,24 @@
 # Studio
 
-A short description of your project: **Studio** is a web application for [insert purpose, e.g., content management, chatbots, etc.].
+A modern web application built with Next.js, TypeScript, and Tailwind CSS.
 
-## Features
+## 🚀 Features
+- Next.js App Router
+- TypeScript support
+- Tailwind CSS styling
+- PostCSS pipeline
+- Easy to extend and customize
 
-- Feature 1: [Short description]
-- Feature 2: [Short description]
-- Feature 3: [Short description]
+## 📦 Requirements
+Before you start, make sure you have:
 
-## Technologies Used
+- **Node.js** 18 or later  
+- **npm** or **yarn** or **pnpm** installed  
+- A terminal or code editor like VS Code
 
-- Python [web framework, e.g., Flask/Django]
-- JavaScript (Frontend)
-- [Database, e.g., SQLite/PostgreSQL/MySQL]
-- HTML/CSS
+## 🛠️ Installation
 
-## Getting Started
+Clone the repository:
 
-### Prerequisites
-
-- Python >= 3.x or Node.js >= 16.x
-- Git
-
-### Installation
-
-1. Clone the repository  
+```bash
+git clone https://github.com/Manikandan-8078/studio.git
